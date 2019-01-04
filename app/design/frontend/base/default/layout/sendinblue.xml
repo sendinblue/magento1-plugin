@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<layout version="1.1.0">
+    <checkout_onepage_success>
+        <reference name="before_body_end">
+            <block ifconfig="sendinblue/tracking/code" type="sendinblue/sendinblue" name="sendinblue.sendinblue" />
+        </reference>
+    </checkout_onepage_success>
+	 <checkout_multishipping_success>
+        <reference name="before_body_end">
+            <block ifconfig="sendinblue/tracking/code" type="sendinblue/sendinblue" name="sendinblue.sendinblue" />
+        </reference>
+    </checkout_multishipping_success>
+	
+	<customer_address_form translate="label">
+        <reference name="my.account.wrapper">
+			<block  type="customer/address_edit"  name="sendinblue_account_edit" template="sendinblue/account/edit.phtml"/>
+		</reference>
+    </customer_address_form>
+	
+	  <checkout_multishipping_address_editshipping translate="label"> 
+		<reference name="content">
+          <block  type="customer/address_edit"  name="sendinblue_account_edit" template="sendinblue/account/edit.phtml"/>
+        </reference>
+    </checkout_multishipping_address_editshipping>
+	
+	 <checkout_multishipping_address_editaddress>
+        <reference name="content">
+          <block  type="customer/address_edit"  name="sendinblue_account_edit" template="sendinblue/account/edit.phtml"/>
+        </reference>
+    </checkout_multishipping_address_editaddress>
+	
+	    <checkout_multishipping_address_newbilling translate="label">
+        <reference name="content">
+          <block  type="customer/address_edit"  name="sendinblue_account_edit" template="sendinblue/account/edit.phtml"/>
+        </reference>
+    </checkout_multishipping_address_newbilling>
+
+</layout>

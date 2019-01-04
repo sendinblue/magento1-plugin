@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>
+	<acl>
+	    <resources>
+	      <admin>
+		    <children>
+		        <system>
+		            <children>
+		                <config>
+		                    <children>
+		                        <sendinblue translate="title" module="sendinblue">
+		                            <title>SendinBlue Settings</title>
+		                        </sendinblue>
+		                    </children>
+		                </config>
+		            </children>
+		        </system>
+		    </children>
+		</admin>
+	    </resources>
+	</acl>	
+</config>

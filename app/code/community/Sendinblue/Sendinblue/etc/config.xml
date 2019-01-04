@@ -1,0 +1,321 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Sendinblue_Sendinblue>
+            <version>1.4.0</version>
+            <platform>ce</platform>
+        </Sendinblue_Sendinblue>
+    </modules>
+    <adminhtml>
+        <menu>
+            <system>
+                <children>
+                    <mails translate="title" module="sendinblue">
+                        <title>SendinBlue Settings</title>
+                        <action>adminhtml/myform</action>
+                        <sort_order>0</sort_order>
+                    </mails>
+                </children>
+            </system>
+        </menu>
+        <translate></translate>
+        <events>
+            <!--use for delete customer  (post) -->
+            <controller_action_postdispatch_adminhtml_customer_massDelete>
+                <observers>
+                    <sendinblue_customer_massDelete>
+                        <type>singleton</type>
+                        <class>Sendinblue_Sendinblue_Model_Observer</class>
+                        <method>adminCustomerDelete</method>
+                    </sendinblue_customer_massDelete>
+                </observers>
+            </controller_action_postdispatch_adminhtml_customer_massDelete>
+            
+            <!--use for delete newsletter subcriber  (post) -->
+            <controller_action_postdispatch_adminhtml_newsletter_subscriber_massDelete>
+                <observers>
+                    <sendinblue_newsletter_massDelete>
+                        <type>singleton</type>
+                        <class>Sendinblue_Sendinblue_Model_Observer</class>
+                        <method>adminSubcriberDelete</method>
+                    </sendinblue_newsletter_massDelete>
+                </observers>
+            </controller_action_postdispatch_adminhtml_newsletter_subscriber_massDelete>
+            
+            <!--use for subscribe customer  (subscribe customer for newsletter from admin) (post) -->
+            <controller_action_postdispatch_adminhtml_customer_massSubscribe>
+                <observers>
+                    <sendinblue_customer_massSubscribe>
+                        <type>singleton</type>
+                        <class>Sendinblue_Sendinblue_Model_Observer</class>
+                        <method>adminCustomerSubscribe</method>
+                    </sendinblue_customer_massSubscribe>
+                </observers>
+            </controller_action_postdispatch_adminhtml_customer_massSubscribe>
+            
+            <!--use for unsubscribe customer  (post) -->
+            <controller_action_postdispatch_adminhtml_customer_massUnsubscribe>
+                <observers>
+                    <sendinblue_customer_massUnsubscribe>
+                        <type>singleton</type>
+                        <class>Sendinblue_Sendinblue_Model_Observer</class>
+                        <method>adminCustomerDelete</method>
+                    </sendinblue_customer_massUnsubscribe>
+                </observers>
+            </controller_action_postdispatch_adminhtml_customer_massUnsubscribe>
+            
+            <!--use for unsubscribe newsletter subscriber  (post) -->
+            <controller_action_predispatch_adminhtml_newsletter_subscriber_massUnsubscribe>
+                <observers>
+                    <sendinblue_newsletter_massUnsubscribe>
+                        <type>singleton</type>
+                        <class>Sendinblue_Sendinblue_Model_Observer</class>
+                        <method>adminSubcriberDelete</method>
+                    </sendinblue_newsletter_massUnsubscribe>
+                </observers>
+            </controller_action_predispatch_adminhtml_newsletter_subscriber_massUnsubscribe>
+            
+                      
+            <sales_order_save_after>
+                <observers>
+                    <sendinblue_update_data>
+                        <type>singleton</type>
+                        <class>Sendinblue_Sendinblue_Model_Observer</class>
+                        <method>updateStatus</method>
+                    </sendinblue_update_data>
+                </observers>
+            </sales_order_save_after>                        
+        </events>
+
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <mails>
+                            <children>
+                                <mails>
+                                    <title>Sendinblue</title>
+                                </mails>
+                            </children>
+                        </mails>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <sendinblue>
+                                            <title>Sendinblue</title>
+                                        </sendinblue>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                    <children>
+                        <system>
+                            <children>
+                                <mails translate="title" module="sendinblue">
+                                    <title>Sendinblue Settings</title>
+                                    <sort_order>0</sort_order>
+                                    <action></action>
+                                </mails>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>  
+
+        <translate>
+            <modules>
+                <Sendinblue_Sendinblue>
+                    <files>
+                        <default>Sendinblue.csv</default>
+                    </files>
+                </Sendinblue_Sendinblue>
+            </modules>
+        </translate>
+        
+        
+        <layout>
+            <updates>
+                <sendinblue_sendinblue>
+                    <file>sendinblue.xml</file>
+                </sendinblue_sendinblue>
+            </updates>
+        </layout>
+        
+    </adminhtml>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <sendinblue after="Mage_Adminhtml">Sendinblue_Sendinblue_Adminhtml</sendinblue>
+                        <frontName>sendinblue</frontName>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+        <children>
+            <system>
+                <children>
+                    <mails translate="label" module="sendinblue">
+                        <title>Sendinblue Settings</title>
+                        <sort_order>40</sort_order>
+                        <action>adminhtml/system_config/edit/section/sendinblue</action>
+                    </mails>
+                </children>
+            </system>
+        </children>
+    </admin>
+    <global>        
+        <events>
+            <newsletter_subscriber_save_commit_after>
+                <observers>
+                    <sendinblue_sendinblue_model_observer>
+                        <class>Sendinblue_Sendinblue_Model_Observer</class>
+                        <method>subscribedToNewsletter</method>
+                    </sendinblue_sendinblue_model_observer>
+                </observers>
+            </newsletter_subscriber_save_commit_after>
+            <customer_save_after>
+                <observers>
+                    <sendinblue_update_data>
+                        <type>singleton</type>
+                        <class>Sendinblue_Sendinblue_Model_Observer</class>
+                        <method>updateNewObserver</method>
+                    </sendinblue_update_data>
+                </observers>
+            </customer_save_after>  
+        </events>
+                
+        <template>
+            <email>
+                <custom_template>
+                    <label>Sendinblue custom email module</label>
+                        <file>sendinsmtp_conf.html</file>
+                    <type>html</type>
+                </custom_template>
+                <notification_template>
+                    <label>Sendinblue notification email module</label>
+                        <file>sendin_notification.html</file>
+                    <type>html</type>
+                </notification_template>
+                <doubleoptin_template>
+                    <label>Sendinblue doubleoptin email module</label>
+                        <file>doubleoptin_temp.html</file>
+                    <type>html</type>
+                </doubleoptin_template>
+            </email>
+        </template>
+        
+        <models>
+            <core>
+                <rewrite>
+                    <email>Sendinblue_Sendinblue_Model_Email</email>
+                    <email_template>Sendinblue_Sendinblue_Model_Email_Template</email_template>
+                </rewrite>
+            </core>
+            <sendinblue>
+                <class>Sendinblue_Sendinblue_Model</class>
+                <resourceModel>sendinblue_mysql4</resourceModel>
+            </sendinblue>
+            <sendinblue_mysql4>
+                <class>Sendinblue_Sendinblue_Model_Mysql4</class>
+                <entities>
+                    <sendinblue>
+                        <table>sendinblue_country_codes</table>
+                    </sendinblue>
+                </entities>
+            </sendinblue_mysql4>
+        </models>
+        <resources>
+            <sendinblue_setup>
+                <setup>
+                    <module>Sendinblue_Sendinblue</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </sendinblue_setup>
+            <sendinblue_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </sendinblue_write>
+            <sendinblue_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </sendinblue_read>
+        </resources>
+        
+        <helpers>
+            <sendinblue>
+                <class>Sendinblue_Sendinblue_Helper</class>
+            </sendinblue>
+        </helpers>
+        <blocks>
+            <sendinblue>
+                <class>Sendinblue_Sendinblue_Block</class>
+            </sendinblue>
+        </blocks>            
+    </global>
+
+    <crontab>
+        <jobs>
+            <sendinblue_sendinblue>             
+                <schedule>
+                    <cron_expr>*/5 * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>sendinblue/observer::syncData</model>
+                </run>
+            </sendinblue_sendinblue>
+        </jobs>
+    </crontab>
+    
+    <default>
+        <sendinblue>
+            <general>
+                <enabled>0</enabled>
+                <test>0</test>
+                <test_address />
+            </general>
+            <smtp>
+                <host>sendinblue.fr</host>
+                <port />
+                <login />
+                <password />
+                <ssl />
+            </smtp>
+        </sendinblue>               
+    </default>
+    
+    <frontend>
+        <events>            
+            <!--use when new subcriber add for newsletter-->
+            <controller_action_postdispatch_newsletter_subscriber_new>
+                <observers>
+                    <sendinblue_subscribe_new_observer>
+                        <type>singleton</type>
+                        <class>Sendinblue_Sendinblue_Model_Observer</class>
+                        <method>subscribeObserver</method>
+                    </sendinblue_subscribe_new_observer>
+                </observers>
+            </controller_action_postdispatch_newsletter_subscriber_new>
+            <!--use when new user register check (is_subscribed = 1)-->         
+        </events>
+        
+         <layout>
+            <updates>
+                <sendinblue_sendinblue>
+                    <file>sendinblue.xml</file>
+                </sendinblue_sendinblue>
+            </updates>
+        </layout>        
+    </frontend> 
+</config>

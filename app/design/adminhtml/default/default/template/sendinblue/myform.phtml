@@ -1,0 +1,799 @@
+<?php
+   /**
+   * @author Sendinblue plateform <contact@sendinblue.com>
+   * @copyright  2013-2014 Sendinblue
+   * URL:  https:www.sendinblue.com
+   * Do not edit or add to this file if you wish to upgrade Sendinblue Magento plugin to newer
+   * versions in the future. If you wish to customize Sendinblue magento plugin for your
+   * needs then we can't provide a technical support.
+   **/
+   ?>
+<link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+<script>
+   var selectoption = "<?php echo $this->__('Select option'); ?>";
+   var selected = "<?php echo $this->__('Selected'); ?>";
+</script>
+<?php 
+   $skinUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN);
+   ?>
+<script type="text/javascript" src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/js/jquery.multiselect.min.js"></script>
+<script type="text/javascript" src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/js/sendinblue.js"></script>
+<div class="entry-edit">
+<div class="">
+   <img class="sendin-logo" src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/<?php echo $this->__('sendinblue.png'); ?>">
+   <div class="slogan">
+      <?php echo $this->__('SendinBlue : THE all-in-one plugin for your marketing and transactional emails.'); ?>
+   </div>
+   <div class="clear"></div>
+</div>
+<input type="hidden" name="langvalue" value="<?php echo Mage::app()->getLocale()->getLocaleCode(); ?>" id="langvalue">
+<div class="sendin_row">
+   <fieldset class="fields">
+      <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif">
+         <?php echo $this->__('SendinBlue'); ?>
+      </legend>
+      <div class="contact-details">
+         <h2 style="color:#268CCD;"> <?php echo $this->__('Contact SendinBlue team'); ?></h2>
+         <div style="clear: both;"></div>
+         <p> <?php echo $this->__('Contact us:'); ?>
+            <br><br>Email:<a href="mailto:<?php echo $this->__('contact@sendinblue.com'); ?>" style="color:#268CCD; text-decoration: none;">
+            <?php echo $this->__('contact@sendinblue.com'); ?></a>
+            <br><?php echo $this->__('Phone : 0899 25 30 61'); ?>
+         </p>
+         <p style="padding-top:20px;"><b><?php echo $this->__('For further informations, please visit our website:'); ?></b>
+            <br><a href="<?php echo $this->__('https://www.sendinblue.com?utm_source=magento_plugin&utm_medium=plugin&utm_campaign=module_link'); ?>" target="_blank" style="color:#268CCD; text-decoration: none;">
+            <?php echo $this->__('https://www.sendinblue.com'); ?></a>
+         </p>
+      </div>
+      <div>
+         <p><?php echo $this->__('With the SendinBlue plugin, you can find everything you need to easily and efficiently send your email & SMS campaigns to your prospects and customers.'); ?></p>
+         <ul class="listt">
+            <li>&nbsp;<?php echo $this->__('Synchronize your subscribers with SendinBlue (subscribed and unsubscribed contacts)'); ?></li>
+            <li>&nbsp;<?php echo $this->__('Easily create good looking emailings'); ?></li>
+            <li>&nbsp;<?php echo $this->__('Schedule your campaigns'); ?></li>
+            <li>&nbsp;<?php echo $this->__('Track your results and optimize'); ?></li>
+            <li>&nbsp;<?php echo $this->__('Monitor your transactional emails (purchase confirmation, password reset …) with a better deliverability and real-time analytics'); ?></li>
+         </ul>
+         <b><?php echo $this->__('Why should you use SendinBlue ?'); ?></b>
+         <ul class="listt">
+            <li>&nbsp;<?php echo $this->__('Optimized deliverability'); ?></li>
+            <li>&nbsp;<?php echo $this->__('Unbeatable pricing &ndash; best value in the industry'); ?></li>
+            <li>&nbsp;<?php echo $this->__('Technical support, by phone or by email'); ?></li>
+         </ul>
+      </div>
+      <div style="clear:both;">&nbsp;</div>
+   </fieldset>
+</div>
+<?php
+   $viewData = array();
+   $viewData = Mage::registry('viewData');
+   $sendinStatus = $viewData['sendinStatus'];
+   $moduleStatus = isset($sendinStatus) ? 1 : 0;
+   $style = ($moduleStatus) ? '' : 'style="display:none;"';
+   $apiKey = $viewData['apiKey'];
+   $getSyncronize = $viewData['getSyncronize'];
+   $trackStatus = $viewData['trackStatus'];
+   $trackingHistory = $viewData['trackingHistory'];
+   $notifySmsStatus = $viewData['notifySmsStatus'];
+   $orderSmsStatus = $viewData['orderSmsStatus'];
+   $campaignStatus = $viewData['campaignStatus'];
+   $shipingSmsStatus = $viewData['shipingSmsStatus'];
+   $formKey = $viewData['formKey'];
+   ?>
+<div class="sendin_row">
+   <fieldset class="fields">
+      <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif">
+         <?php echo $this->__('Prerequisites'); ?>
+      </legend>
+      <span><?php echo $this->__('- You should have a SendinBlue account. You can create a free account here:'); ?> 
+      <a href="<?php echo $this->__('https://www.sendinblue.com?utm_source=magento_plugin&utm_medium=plugin&utm_campaign=module_link'); ?>" target="_blank" style="text-decoration: none; color: #268CCD;">
+      &nbsp;<?php echo $this->__('https://www.sendinblue.com'); ?></a><br></span>
+   </fieldset>
+</div>
+<div class="sendin_row" >
+   <form id="edit_formapik" name="edit_form" method="post" action="<?php echo $this->getUrl('*/*/apikeypost'); ?>">
+      <input name="form_key" type="hidden" value="<?php echo $formKey; ?>" />     
+      <input name="skin_url" id ='skin_url' type="hidden" value="<?php echo $skinUrl;?>" />       
+      <div class="section-config active">
+         <fieldset class="fields">
+            <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif"> <?php echo $this->__('Settings'); ?></legend>
+            <table cellspacing="0" class="form-list3">
+               <tr>
+                  <td class="fix_width2"><label><?php echo $this->__('Activate the SendinBlue module:'); ?></label></td>
+                  <td class="input-ele">
+                     <input type="radio" <?php if($sendinStatus == 1) { echo 'checked'; } ?>    name="sendin_api_status"  class="sendin_api_status radio_nospaceing" value="1" /> <?php echo $this->__('Yes'); ?>
+                     <input  type="radio"  name="sendin_api_status" <?php if($sendinStatus == 0) { echo 'checked'; } ?>  class="sendin_api_status radio_spaceing2" value="0" /> <?php echo $this->__('No'); ?>
+                     <input type="hidden" name="apistatuskey" id="apistatuskey" value="<?php echo $moduleStatus;?>">
+                  </td>
+               </tr>
+               <tr <?php echo $style; ?> id="sendin_apikey">
+                  <td><label><?php echo $this->__('API Key:'); ?></label></td>
+                  <td class="input-ele">  
+                     <input  type="text" name="sendin_apikey" id="sendin_apikey_val" class="input-text" value="<?php echo $apiKey; ?>" />
+                     <span class="toolTip" title="<?php echo stripslashes($this->__('Please enter your API key from your SendinBlue account and if you don\'t have it yet, please go to www.sendinblue.com and subscribe. You can then get the API key from https://my.sendinblue.com/integration')); ?>">&nbsp;</span>
+                  </td>
+               </tr>
+               <tr>
+                  <td>&nbsp;</td>
+                  <td class="a-left">
+                     <div class="btnmrgn-right">
+                        <input type="submit" class="btn" name="SmtpSubmit" onclick="return apikvalidate('<?php echo $this->__('Please enter your API key') ;?>');"  value ="<?php echo $this->__('Update'); ?>" />
+                     </div>
+                  </td>
+               </tr>
+            </table>
+         </fieldset>
+      </div>
+   </form>
+</div>
+<?php if ($apiKey != '') { ?>
+<div class="sendin_row alldiv" <?php echo $style; ?> >
+<form id="edit_form" name="edit_form" method="post" action="<?php echo $this->getUrl('*/*/syncronizepost'); ?>">
+   <div class="section-config active">
+      <input name="form_key" type="hidden" value="<?php echo $formKey; ?>" />       
+      <fieldset id="my-fieldset" class="fields">
+         <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif"> <?php echo $this->__('Activate SendinBlue to manage subscribers'); ?></legend>
+         <table cellspacing="0" class="form-list">
+            <tr>
+               <td class="fix_width"><label><?php echo $this->__('Activate SendinBlue to manage subscribers'); ?></label></td>
+               <td class="input-ele">
+                  <input type="radio" <?php if($getSyncronize == 1) { echo "checked"; } ?>  name="syncronize" value="1" class="radio_nospaceing hdtab"/> <?php echo $this->__('Yes'); ?>
+                  <input  type="radio" <?php if($getSyncronize == 0) { echo "checked"; } ?> name="syncronize" value="0" class="radio_spaceing2 hdtab" />  <?php echo $this->__('No'); ?> <span title="<?php echo $this->__('If you activate this feature, your new contacts will be automatically added to SendinBlue or unsubscribed from SendinBlue. To synchronize the other way (SendinBlue to Magento), you should run the url (mentioned below) each day.'); ?>" class="toolTip">&nbsp;</span>
+               </td>
+            </tr>
+            <tr>
+               <td colspan="2">
+                  <div id="hidetabselect" <?php if(!$getSyncronize) {?>style="display:none;"<?php } ?>>
+                     <table>
+                        <tr>
+                           <td><label><?php echo $this->__('Your Lists'); ?></label></td>
+                           <td class="input-ele">
+                              <?php
+                                 $list = $viewData['list'];
+                                 $selectedlist = $viewData['selectedlist'];
+                                 if($selectedlist!=NULL){
+                                        $list_array = explode('|',$selectedlist);
+                                    }
+                                     else{
+                                        $list_array = array();
+                                    }
+                                        
+                                 ?>
+                              <select multiple="multiple" name="sendin_list[]" id="select">
+                                 <?php foreach($list as $value ){ ?>                             
+                                 <option value="<?php echo $value['id']; ?>" <?php if(in_array($value['id'],$list_array)) echo 'selected = "selected"' ?> ><?php echo $value['name']; ?></option>
+                                 <?php } ?>
+                              </select>
+                              <span title="<?php echo $this->__('Select the contact list where you want to save the contacts of your site Magento. By default, we have created a list Magento in your SendinBlue account and we have selected it'); ?>" class="toolTip">&nbsp;</span>
+                           </td>
+                        </tr>
+                        <!-- double optin functionality -->
+                        <tr>
+                           <td></td>
+                           <td>
+                              <div class="col-md-6 left-wrapper radio_group_option">
+                                 <div class="form-group manage_subscribe_block">
+                                    <div>
+                                       <input type="radio" value="nocon" <?php if(isset($viewData['sendinSubscribeConfirmType']) && $viewData['sendinSubscribeConfirmType'] == 'nocon') echo 'checked="checked"'; ?> name="subscribe_confirm_type" id="no_follow_email">
+                                       <label for="no_follow_email" class="radio-label"> <?php echo $this->__('No confirmation'); ?></label>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div style="display:block;" class="inner_manage_box">
+                                       <div class="ver_5" id="no-templates"><?php echo $this->__('With this option, contacts are directly added to your list when they enter their email address. No confirmation email is sent.'); ?></div>
+                                    </div>
+                                 </div>
+                                 <div class="form-group manage_subscribe_block">
+                                    <div class="col-md-10">
+                                       <input type="radio" value="simplemail" <?php if(isset($viewData['sendinSubscribeConfirmType']) && $viewData['sendinSubscribeConfirmType'] == 'simplemail') echo 'checked="checked"'; ?> id="follow_mail" name="subscribe_confirm_type">
+                                       <label for="follow_mail" class="radio-label"> <?php echo $this->__('Simple confirmation'); ?></label><span title="<?php echo $this->__('This confirmation email is one of your SMTP templates. By default, we have created a Default Template - Single Confirmation. You can create and activate your SMTP templates by clicking here'); ?>" class="toolTip">
+                                       </span>
+                                    </div>
+                                    <div class="inner_manage_box">
+                                       <div class="clearfix"></div>
+                                       <div class="ver_5" id="create-templates"> <?php echo $this->__('By selecting this option, contacts are directly added to your list when they enter their email address on the form. A confirmation email will automatically be sent following their subscription.'); ?></div>
+                                       <div class="clearfix"></div>
+                                       <div id="mail-templates">
+                                          <div class="listData ver_5 managesubscribeBlock">
+                                             <select class="ui-state-default" name="template_simple">
+                                                <option value=""><?php echo $this->__('Select Template'); ?></option>
+                                                <?php
+                                                   $templatelist = isset($viewData['templatelist']) ? $viewData['templatelist'] : array();
+                                                   if (!empty($templatelist['data']['campaign_records'])) {
+                                                       foreach ($templatelist['data']['campaign_records'] as $template_data) { 
+                                                           if (isset($template_data['templ_status']) && $template_data['templ_status'] === 'Active' && stristr($template_data['html_content'], 'DOUBLEOPTIN') === false) { ?>
+                                                <option value="<?php echo $template_data['id']; ?>" <?php if(isset($viewData['sendinTemplateId']) && $template_data['id'] == $viewData['sendinTemplateId']) echo 'selected = "selected"'; ?> ><?php echo $template_data['campaign_name']; ?></option>
+                                                <?php 
+                                                   }
+                                                   }
+                                                   } 
+                                                   ?>
+                                             </select>
+                                             <span title="<?php echo $this->__('Select a SendinBlue template that will be sent personalized for each contact that subscribes to your newsletter'); ?>" class="toolTip"></span>
+                                          </div>
+                                       </div>
+                                       <div class="clearfix"></div>
+                                       <div id="mail-templates-active-state"></div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                 </div>
+                                 <div class="clearfix"></div>
+                                 <div class="form-group manage_subscribe_block">
+                                    <div class="col-md-10">
+                                       <input type="radio" value="doubleoptin" <?php if(isset($viewData['sendinSubscribeConfirmType']) && $viewData['sendinSubscribeConfirmType'] == 'doubleoptin') echo 'checked="checked"'; ?> id="double_optin" name="subscribe_confirm_type">
+                                       <label for="double_optin" class="radio-label"> <?php echo $this->__('Double opt-in confirmation'); ?></label>
+                                       <span title="<?php echo $this->__("If you select the Double Opt-in confirmation, subscribers will receive an email inviting them to confirm their subscription.Contact will be saved in the 'FORM' folder, on the 'Temp - DOUBLE OPT-IN' list. After confirmation, the contact will be saved in the 'Corresponding List' selected below."); ?>" class="toolTip">
+                                       </span>
+                                    </div>
+                                    <div class="inner_manage_box">
+                                       <div class="clearfix"></div>
+                                       <!-- Please select a template with the [DOUBLEOPTIN] link -->
+                                       <div id="create-doubleoptin-templates">
+                                          <p><?php echo $this->__('Once the form has been completed, your contact will receive an email with a link to confirm their subscription.'); ?></p>
+                                          <select  class="ui-state-default" name="doubleoptin_template_id">
+                                             <option value=""><?php echo $this->__('Select Template'); ?></option>
+                                             <?php
+                                                $templatelist = isset($viewData['templatelist']) ? $viewData['templatelist'] : array();
+                                                if (!empty($templatelist['data']['campaign_records'])) {
+                                                    foreach ($templatelist['data']['campaign_records'] as $template_data) { 
+                                                        if (isset($template_data['templ_status']) && $template_data['templ_status'] === 'Active' && stristr($template_data['html_content'], '[DOUBLEOPTIN]')) {
+                                                ?>                        
+                                             <option value="<?php echo $template_data['id']; ?>" <?php if(isset($viewData['sendinDoubleoptinTemplateId']) && $template_data['id'] == $viewData['sendinDoubleoptinTemplateId']) echo 'selected = "selected"'; ?> ><?php echo $template_data['campaign_name']; ?></option>
+                                             <?php   
+                                                }
+                                                }
+                                                } 
+                                                ?>
+                                          </select>
+                                       </div>
+                                       <!-- Redirect URL after click on the validation email -->
+                                       <div class="clearfix"></div>
+                                       <div id="doubleoptin-redirect-url-area" class="form-group clearfix">
+                                          <input type="checkbox" class="openCollapse" <?php if(isset($viewData['sendinOptinRedirectUrlCheck']) && $viewData['sendinOptinRedirectUrlCheck'] == 'yes') echo 'checked="checked"'; ?> value="yes" name="optin_redirect_url_check" id="doptin_redirect_span_icon">
+                                          <a href=""> <?php echo $this->__('Redirect URL after clicking in the validation email'); ?> </a> 
+                                          <!-- <label style="margin-bottom: 5px;"></label> -->
+                                          <div id="mail-doubleoptin-redirect" class="collapse">
+                                             <p style="width: 90%;text-align: justify;text-justify: inter-word;">       
+                                                <?php echo $this->__('Redirect your contacts to a landing page or to your website once they have clicked on the confirmation link in the email.'); ?>
+                                             </p>
+                                             <input type="url" style="margin-bottom:10px;width:370px" value="<?php echo $viewData['sendinDoubleoptinRedirectUrl']; ?>" placeholder="http://your-domain.com" class="form-control" name="doubleoptin-redirect-url" id="doubleoptin-redirect-url">
+                                             <div class="clearfix"></div>
+                                             <div class="pull-left" id="doubleoptin-redirect-message"> </div>
+                                             <div class="clearfix"></div>
+                                          </div>
+                                       </div>
+                                       <!-- Send a final confirmation email -->
+                                       <div class="clearfix"></div>
+                                       <div id="doubleoptin-final-confirmation-area" class="form-group clearfix">
+                                          <input type="checkbox" class="openCollapse" <?php if(isset($viewData['sendinFinalConfirmEmail']) && $viewData['sendinFinalConfirmEmail'] == 'yes') echo 'checked="checked"'; ?> value="yes" name="final_confirm_email" id="doptin_final_confirm_email">
+                                          <a href="#doubleoptin-final-confirm"> <?php echo $this->__('Send a final confirmation email'); ?> </a>
+                                          <div id="doubleoptin-final-confirm" class="collapse">
+                                             <p><?php echo $this->__('Once a contact has clicked in the double opt-in confirmation email, send them a final confirmation email'); ?></p>
+                                             <div style="text-align: left;" class="listData ver_5 managesubscribeBlock">
+                                                <select  class="ui-state-default" name="template_final">
+                                                   <option value=""><?php echo $this->__('Select Template'); ?></option>
+                                                   <?php
+                                                      $templatelist = $viewData['templatelist'];
+                                                      if (!empty($templatelist['data']['campaign_records'])) {
+                                                          foreach ($templatelist['data']['campaign_records'] as $template_data) {
+                                                              if (isset($template_data['templ_status']) && $template_data['templ_status'] === 'Active' && stristr($template_data['html_content'], 'DOUBLEOPTIN') === false) { 
+                                                      ?>                        
+                                                   <option value="<?php echo $template_data['id']; ?>" <?php if(isset($viewData['sendinTemplateFinal']) && $template_data['id'] == $viewData['sendinTemplateFinal']) echo 'selected = "selected"'; ?> ><?php echo $template_data['campaign_name']; ?></option>
+                                                   <?php   
+                                                      }
+                                                      }
+                                                      } 
+                                                      ?>  
+                                                </select>
+                                                <span title="<?php echo $this->__('Select a SendinBlue template that will be sent personalized for each contact that subscribes to your newsletter'); ?>"class="toolTip"></span>
+                                             </div>
+                                             <div class="clearfix"></div>
+                                             <div class="pull-left" id="final-mail-templates"></div>
+                                             <div class="clearfix"></div>
+                                          </div>
+                                          <div  id="doubleoptin-templates-active-state"> </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="clearfix"></div>
+                           </td>
+                        </tr>
+                        <tr>
+                        <td>&nbsp;</td>
+                        <td class="a-left">
+                        <div class="btnmrgn-right">
+                        <input type="submit" class="btn" name="syncronizeSubmit" value ="<?php echo $this->__('Update'); ?>" /></div>
+                        </td>
+                        </tr>
+</form>
+<?php if(isset($viewData['importOldSubsStatus']) && $viewData['importOldSubsStatus'] == 1){ ?>
+<form id="reimport_form" name="reimport_form" method="post" action="<?php echo $this->getUrl('*/*/reimportpost'); ?>">
+<input name="form_key" type="hidden" value="<?php echo $formKey; ?>" /> 
+<tr>
+<td>&nbsp;</td>
+<td class="a-left">
+<div class="btnmrgn-right">                                     
+<input type="submit" class="btn" name="importoldSubmit" value ="<?php echo $this->__('Import Old Subscribers'); ?>" /></div>
+</td>
+</tr></form>
+<?php } ?>
+<tr><td colspan="2">
+<?php echo $this->__('To synchronize the emails of your customers from SendinBlue platform to your e-commerce website, you should run '); ?><a href="<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/sync/index/",array()); ?>" style="color: #000000; outline: 0 none; text-decoration: none;"><?php echo $this->__('this link'); ?> </a><?php echo $this->__('each day'); ?><span class="toolTip" title="<?php echo $this->__('Note that if you change the name of your Shop (currently ');?><?php echo ucfirst(Mage::app()->getFrontController()->getRequest()->getModuleName());?><?php echo $this->__(') the token value changes.'); ?>">&nbsp;</span>
+</td></tr>
+</table>
+</div>
+</td>                       
+</tr>                    
+</table>
+</fieldset>
+</div>
+</div>
+<?php 
+   }
+   
+   $moduleStatus = $viewData['moduleStatus'];
+   $styleSmtp = ($moduleStatus == 0) ? 'style="display:none;"' : '' ;
+   
+   ?>
+<?php if ($apiKey != '') {  ?>
+<div class="sendin_row alldiv" <?php echo $style; ?>  >
+   <form id="edit_formsmtp" name="edit_form" method="post" action="<?php echo $this->getUrl('*/*/sendmail'); ?>">
+      <input name="form_key" type="hidden" value="<?php echo $formKey; ?>" /> 
+      <input name="smtpUrl" type="hidden" id="smtpUrl" value="<?php echo $this->getUrl('adminhtml/ajax/smtppost'); ?>" />    
+      <div class="section-config active">
+         <fieldset class="fields">
+            <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif"> <?php echo $this->__('Activate SendinBlue SMTP for your transactional emails'); ?></legend>
+            <table cellspacing="0" class="form-list">
+               <tr>
+                  <td class="fix_width"><label><?php echo $this->__('Activate SendinBlue SMTP for your transactional emails'); ?></label></td>
+                  <td class="input-ele">
+                     <input type="radio" class = 'smtpStatus radio_nospaceing' <?php if($moduleStatus == 1) { echo 'checked'; } ?> name="smtp" value="1" /> <?php echo $this->__('Yes'); ?>
+                     <input  <?php if($moduleStatus == 0) { echo 'checked'; } ?> type="radio" class = 'smtpStatus radio_spaceing2' name="smtp" value="0" /> <?php echo $this->__('No'); ?><span title="<?php echo $this->__('Transactional email is an expected email because it is triggered automatically after a transaction or a specific event. Common examples of transactional email are : account opening and welcome message, order shipment confirmation, shipment tracking and purchase order status, registration via a contact form, account termination, payment confirmation, invoice etc.'); ?>" class="toolTip">&nbsp;</span>
+                  </td>
+                  <td>&nbsp;</td>
+               </tr>
+               <tr <?php echo $styleSmtp; ?> class='smtptest'>
+                  <td class="fix_width"><label><?php echo $this->__('Send email test From / To :'); ?></label></td>
+                  <td class="input-ele"><input class="input-text input-height" name="email" id="email" value="" size="40"/> 
+                     <input type="submit" class="btn" style="margin-left:3px;" name="SmtpSubmit" onclick="return smtpvalidate('<?php echo $this->__('Please provide valid Email!') ;?>');" value ="<?php echo $this->__('Send'); ?>" />
+                  </td>
+               </tr>
+            </table>
+         </fieldset>
+      </div>
+   </form>
+</div>
+<div class="sendin_row alldiv" <?php echo $style; ?> >
+   <div class="section-config active">
+      <input name="trackingUrl" type="hidden" id="trackingUrl" value="<?php echo $this->getUrl('adminhtml/ajax/codepost'); ?>" />          
+      <fieldset id="my-fieldset" class="fields">
+         <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif"> <?php echo $this->__('Code tracking'); ?> </legend>
+         <table cellspacing="0" class="form-list">
+            <tr>
+               <td class="fix_width"><label><?php echo $this->__('Do you want to install a tracking code when validating an order'); ?></label>
+               </td>
+               <td class="input-ele">
+                  <input type="radio" <?php if($trackStatus == 1) { echo 'checked'; } ?>  name="Tracking" class='Tracking radio_nospaceing' value="1" /> <?php echo $this->__('Yes'); ?>
+                  <input  type="radio" <?php if($trackStatus == 0) { echo 'checked'; } ?> name="Tracking"  class='Tracking radio_spaceing2' value="0" /> <?php echo $this->__('No'); ?>
+                  <span title="<?php echo $this->__('This feature will allow you to transfer all your customers orders from Magento into SendinBlue to implement your email marketing strategy.'); ?>" class="toolTip">&nbsp;</span>
+               </td>
+            </tr>
+            <?php  
+               if ($trackStatus == 1 && $trackingHistory == 1)
+                      $style_track = '';
+                      else
+                      $style_track = 'style="display:none;"';
+               if($trackStatus == 1 && $trackingHistory == 1) { ?>
+            <tr <?php echo $style_track; ?> class='ordertracking'>
+               <td>&nbsp;</td>
+               <input type="hidden" name="history_status" value="<?php echo $trackingHistory; ?>" id="history_status">
+               <input name="importordertrackingUrl" type="hidden" id="importordertrackingUrl" value="<?php echo $this->getUrl('adminhtml/ajax/orderhistory'); ?>" />
+               <td class="input-ele"><label style="text-align:left;"><a href="javascript:void(0);" class="Trackhistory button btn" style="color: #000000; outline: 0 none; text-decoration: none; font-weight: normal;"><?php echo $this->__('Import the data of previous orders'); ?></a></label></td>
+            </tr>
+            <?php } ?>
+         </table>
+      </fieldset>
+   </div>
+</div>
+<div class="sendin_row hidetableblock" <?php echo $style; ?> >
+   <fieldset class="fields">
+      <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif">
+         <?php echo $this->__('Manage SMS'); ?>
+      </legend>
+      <table width="100%" cellspacing="0" cellpadding="0"  class="table hidetableblock form-list">
+         <tbody>
+            <tr>
+               <td class="row1" colspan="2" style="border:none; padding-top:10px;">
+                  <span style="margin-bottom:10px; color:#333333;">
+                  <?php echo $this->__('Currently you have '); ?>
+                  <?php
+                     $credit = $viewData['credit'];
+                     $notifyValue = $viewData['notifyValueStatus'];
+                     ?>
+                  <?php if ($credit >= $notifyValue){ ?> <strong style="color:#000000;"><?php echo $credit; ?></strong><?php } else {?><strong style="color:#F03D25;"><?php echo $credit; ?></strong><?php } ?>
+                  <?php echo $this->__(' credits sms. To buy more credits, please click'); ?>
+                  <a target="_blank" href ="<?php echo $this->__('https://www.sendinblue.com/pricing?utm_source=magento_plugin&utm_medium=plugin&utm_campaign=module_link/#tab-plan-smsplan'); ?>" style="color: #000000; outline: 0 none; text-decoration: none;">
+                  <?php echo $this->__('here'); ?></a></span>
+               </td>
+            </tr>
+            <tr>
+               <td>
+                  <label>
+                  <?php echo $this->__('You want to be notified by e-mail when you do not have enough credits?'); ?></label>
+                  <input name="sms_credit" <?php if($notifySmsStatus == 1) { echo 'checked'; } ?> type="radio" value="1" class="sms_credit radio_nospaceing" style="margin-right:10px;" />
+                  <?php echo $this->__('Yes'); ?>
+                  <input name="sms_credit" <?php if($notifySmsStatus == 0) { echo 'checked'; } ?> type="radio" value="0" class="sms_credit radio_spaceing2" style="margin-left:20px;margin-right:10px;" />
+                  <?php echo $this->__('No'); ?>
+                  <input name="credit" type="hidden" id="credits" value="<?php echo $this->getUrl('adminhtml/ajax/credit'); ?>" />
+                  <div class="hideCredit" id="div_email_test" style="padding-top:20px;">
+                     <form action="<?php echo $this->getUrl('*/*/sendnotifysms'); ?>"  method="POST" name="notify_sms_mail_form">
+                        <input name="form_key" type="hidden" value="<?php echo $formKey; ?>" />  
+                        <p class="form-data"><label><?php echo $this->__('Email'); ?></label>
+                           <input name="sendin_notify_email" id="sendin_notify_email" type="text" class="input-text" value="<?php  echo $viewData['notifyEmailStatus']; ?>" size="40" />
+                        </p>
+                        <p class="form-data"> <label><?php echo $this->__('Limit'); ?></label>
+                           <input name="sendin_notify_value" id="sendin_notify_value" type="text" class="input-text" value="<?php echo $viewData['notifyValueStatus']; ?>" size="40" /><span class="toolTip" title="<?php echo $this->__('Alert threshold for remaining credits'); ?>">&nbsp;</span>
+                        </p>
+                        <p class="form-data" style="width:705px"><input name="notify_sms_mail" type="submit" value="<?php echo $this->__('Save'); ?>"  onclick="return validate('<?php echo $this->__('Please provide valid Email!') ;?>','<?php echo $this->__('Please provide a limit in integer format') ; ?>');" class="button btn" style=" float:right;"/></p>
+                        <p class="mrgin-left" style="float:left;"><?php echo $this->__('To get the email notification, you should run '); ?> <a href="<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/notify/index/",array()); ?>" style="color: #000000; outline: 0 none; text-decoration: none;"><?php echo $this->__('this link'); ?> </a> <?php echo $this->__(' atleast one time per day. '); ?>
+                           <span class="toolTip" title="<?php echo $this->__('Note that if you change the name of your Shop (currently ');?><?php echo ucfirst(Mage::app()->getFrontController()->getRequest()->getModuleName());?><?php echo $this->__(') the token value changes.'); ?>">&nbsp;</span>
+                        </p>
+                     </form>
+                  </div>
+               </td>
+            </tr>
+            <tr>
+               <td>
+                  <div id="tabs_wrapper">
+                     <div id="tabs_container">
+                        <ul id="tabs">
+                           <li class="active"><a href="#tab1"><?php echo $this->__('Send SMS after order confirmation'); ?></a></li>
+                           <li><a class="icon_accept" href="#tab2">
+                              <?php echo $this->__('Send a SMS confirmation for the shipment of the order'); ?></a>
+                           </li>
+                           <li><a href="#tab3">
+                              <?php echo $this->__('Send a campaign SMS'); ?>
+                              </a>
+                           </li>
+                        </ul>
+                     </div>
+                     <div id="tabs_content_container">
+                        <div id="tab1" class="tab_content" style="display: block;">
+                           <div class="wrapper" style="margin-top:15px;">
+                              <table width="100%" border="0" cellspacing="0" cellpadding="0" class="form-list3 ">
+                                 <input name="order" type="hidden" id="order" value="<?php echo $this->getUrl('adminhtml/ajax/order'); ?>" />
+                                 <tr>
+                                    <td class="row1 fix_width2" >
+                                       <label class="r_label">
+                                       <?php echo $this->__('Send SMS after order confirmation'); ?></label>
+                                       <div class="radio_bx">
+                                          <input name="sms_order_setting"  <?php if($orderSmsStatus == 1) { echo 'checked'; } ?> class="sms_order_setting radio_nospaceing" type="radio" value="1" />
+                                          <?php echo $this->__('Yes'); ?>
+                                          <input name="sms_order_setting" <?php if($orderSmsStatus == 0) { echo 'checked'; } ?> class="sms_order_setting radio_spaceing2"  type="radio" value="0" />
+                                          <?php echo $this->__('No'); ?>
+                                       </div>
+                                       <div style="clear:both;"></div>
+                                       <div class="hideOrder">
+                                          <h4><?php echo $this->__('SMS settings'); ?></h4>
+                                          <div class="form_table ">
+                                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="form-list3 ">
+                                                <tr>
+                                                   <td>
+                                                      <form method="POST" action="<?php echo $this->getUrl('*/*/sendorder'); ?>" name="sender_order_form">
+                                                         <input name="form_key" type="hidden" value="<?php echo $formKey; ?>" />  
+                                                         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="form-list3 no-padding">
+                                                            <tr>
+                                                               <td class="fix_width2" valign="top">
+                                                                  <label>
+                                                                  <?php echo $this->__('Sender'); ?></label>
+                                                               </td>
+                                                               <td>
+                                                                  <input name="sender_order"  id="sender_order" type="text" value="<?php echo $viewData['sendSmsOrderSubject']; ?>" class="input_bx" autocomplete="off" />
+                                                                  <span class="toolTip" title="<?php echo $this->__('This field allows you to customize the SMS sender. The number of characters is limited to 11 alphanumeric characters. You can´t configure your Sender with a phone number.'); ?>">&nbsp;</span>
+                                                                  <div class="hintmsg"><em><?php echo $this->__('Number of characters left: '); ?><span id="sender_order_text">11</span></em>
+                                                                  </div>
+                                                               </td>
+                                                            </tr>
+                                                            <tr>
+                                                               <td valign="top"><label><?php echo $this->__('Message'); ?></label></td>
+                                                               <td>
+                                                                  <textarea name="sender_order_message" id="sender_order_message" cols="45" rows="5" class="textarea_bx"><?php echo $viewData['sendSmsmOrderMessage']; ?></textarea>
+                                                                  <span class="toolTip" style="float:left; margin-top: 85px;" title="<?php echo $this->__(' Create the content of your SMS with the limit of 160-character.Beyond 160 characters, it will be counted as a second SMS. Thus, if you write SMS of 240 characters, it will be recorded using two SMS.'); ?>">&nbsp;</span>
+                                                                  <span style="float:left; line-height:16px; margin-bottom:15px; width:490px; clear:both;"><?php echo $this->__('Number of SMS used: '); ?><span id="sender_order_message_text_count">0</span>
+                                                                  <div class="hintmsg"><em><?php echo $this->__('Number of characters left: '); ?></em><span id="sender_order_message_text">160</span></div>
+                                                                  <div class="hintmsg"><em><?php echo $this->__('Attention line break is counted as a single character.'); ?></em>
+                                                                  </div>
+                                                                  <br>
+                                                                  <div class="hintmsg"><em><?php echo $this->__('If you want to personalize the SMS, you can use the variables below:'); ?></em></div>
+                                                                  <div class="hintmsg"><em><?php echo $this->__('- For first name use {first_name}'); ?></em></div>
+                                                                  <div class="hintmsg"><em><?php echo $this->__('- For last name use {last_name}'); ?></em></div>
+                                                                  <div class="hintmsg"><em><?php echo $this->__('- For order reference id use {order_reference}'); ?></em></div>
+                                                                  <div class="hintmsg"><em><?php echo $this->__('- For order price use {order_price}'); ?></em></div>
+                                                                  <div class="hintmsg"><em><?php echo $this->__('- For order date use {order_date}'); ?></em></div>
+                                                                  <input name="sender_order_save" type="submit" value="<?php echo $this->__('Save'); ?>" onclick="return senderOrderSaveValid('<?php  echo $this->__('Please fill the Sender field'); ?>','<?php  echo $this->__('Please fill the Message field'); ?>');" class="button mrgn-right btn" style="margin-right:197px;"  />
+                                                               </td>
+                                                            </tr>
+                                                         </table>
+                                                      </form>
+                                                   </td>
+                                                </tr>
+                                                <tr>
+                                                   <td colspan="2" valign="top" border="0">
+                                                      <form method="POST" action="<?php echo $this->getUrl('*/*/sendordertest'); ?>" name="sender_order_testForm">
+                                                         <input name="form_key" type="hidden" value="<?php echo $formKey; ?>" />  
+                                                         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="form-data">
+                                                            <tr>
+                                                               <td>
+                                                                  <div class="hintmsg"><em><?php echo $this->__('Sending a test SMS will be deducted from your SMS credits.'); ?></em></div>
+                                                                  <label><?php echo $this->__('Send a test SMS'); ?></label>
+                                                                  <input name="sender_order_number" id="sender_order_number" maxlength="17" type="text" value="" class="input_bx input-texts" />
+                                                                  <span class="toolTip" title="<?php echo $this->__('The phone number should be in this form: 0033663309741 for this France mobile 06 63 30 97 41 (0033 is France prefix)'); ?>">&nbsp;</span>
+                                                                  <input name="sender_order_submit" type="button" value="<?php echo $this->__('Send'); ?>" onclick="return testsmssend('<?php  echo $this->__('Please fill the Sender field'); ?>','<?php  echo $this->__('Please fill the Message field'); ?>','<?php  echo $this->__('Please enter the valid Mobile Number'); ?>');" class="button btn"  />
+                                                               </td>
+                                                            </tr>
+                                                         </table>
+                                                      </form>
+                                                   </td>
+                                                </tr>
+                                             </table>
+                                          </div>
+                                    </td>
+                                 </tr>
+                              </table>
+                              </div>
+                           </div>
+                        </div>
+                        <div id="tab2" class="tab_content">
+                           <div class="wrapper"  style="margin-top:15px;">
+                              <table width="100%" border="0" cellspacing="0" cellpadding="0" class="form-list3">
+                                 <input name="shiping" type="hidden" id="shiping" value="<?php echo $this->getUrl('adminhtml/ajax/shiping'); ?>" />
+                                 <tr>
+                                    <td class="row1 fix-width2">
+                                       <label class="r_label">
+                                       <?php echo $this->__('Send a SMS confirmation for the shipment of the order'); ?></label>
+                                       <div class="radio_bx"> 
+                                          <input name="sms_shiping_setting" <?php if($shipingSmsStatus==1) { echo 'checked'; } ?> class="sms_shiping_setting radio_nospaceing" type="radio" value="1" />
+                                          <?php echo $this->__('Yes'); ?>
+                                          <input name="sms_shiping_setting" type="radio" value="0" class="sms_shiping_setting radio_spaceing2" <?php if($shipingSmsStatus == 0) { echo 'checked'; } ?>/>
+                                          <?php echo $this->__('No'); ?>
+                                       </div>
+                                       <div style="clear:both;"></div>
+                                       <div class="hideShiping">
+                                          <h4><?php echo $this->__('SMS settings'); ?></h4>
+                                          <div class="form_table ">
+                                             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="form-list3 no-padding">
+                                                <tr>
+                                                   <td>
+                                                      <div class="" style="width:500px;">
+                                                         <form method="post" action="<?php echo $this->getUrl('*/*/sendshipment'); ?>" name="sender_shipment_form">
+                                                            <input name="form_key" type="hidden" value="<?php echo $formKey; ?>" />  
+                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                               <tr>
+                                                                  <td class="fix_width2" valign="top"><label><?php echo $this->__('Sender'); ?></label></td>
+                                                                  <td>
+                                                                     <input name="sender_shipment" maxlength="11" id="sender_shipment" type="text" value="<?php echo $viewData['sendSmsShipingSubject']; ?>" class="input_bx" autocomplete="off" />
+                                                                     <span class="toolTip" title="<?php echo $this->__('This field allows you to customize the SMS sender. The number of characters is limited to 11 alphanumeric characters. You can´t configure your Sender with a phone number.'); ?>">&nbsp;</span>
+                                                                     <div class="hintmsg"><em><?php echo $this->__('Number of characters left: '); ?><span id="sender_shipment_text">11</span></em>
+                                                                     </div>
+                                                                  </td>
+                                                               </tr>
+                                                               <tr>
+                                                                  <td valign="top"><label><?php echo $this->__('Message'); ?></label></td>
+                                                                  <td>
+                                                                     <textarea name="sender_shipment_message" id="sender_shipment_message" cols="45" rows="5" class="textarea_bx"><?php echo $viewData['sendSmsShipingMessage']; ?></textarea>
+                                                                     <span class="toolTip" style="float:left; margin-top: 85px;" title="<?php echo $this->__(' Create the content of your SMS with the limit of 160-character.Beyond 160 characters, it will be counted as a second SMS. Thus, if you write SMS of 240 characters, it will be recorded using two SMS.'); ?>">&nbsp;</span>
+                                                                     <span style="float:left; line-height:16px; margin-bottom:15px; width:470px; clear:both;"><?php echo $this->__('Number of SMS used: '); ?><span id="sender_shipment_message_text_count">0</span>
+                                                                     <div class="hintmsg"><em><?php echo $this->__('Number of characters left: '); ?></em><span id="sender_shipment_message_text">160</span></div>
+                                                                     <div class="hintmsg"><em><?php echo $this->__('Attention line break is counted as a single character.'); ?></em>
+                                                                     </div>
+                                                                     <br>
+                                                                     <div class="hintmsg"><em><?php echo $this->__('If you want to personalize the SMS, you can use the variables below:'); ?></em></div>
+                                                                     <div class="hintmsg"><em><?php echo $this->__('- For first name use {first_name}'); ?></em></div>
+                                                                     <div class="hintmsg"><em><?php echo $this->__('- For last name use {last_name}'); ?></em></div>
+                                                                     <div class="hintmsg"><em><?php echo $this->__('- For order reference id use {order_reference}'); ?></em></div>
+                                                                     <div class="hintmsg"><em><?php echo $this->__('- For order price use {order_price}'); ?></em></div>
+                                                                     <div class="hintmsg"><em><?php echo $this->__('- For order date use {order_date}'); ?></em></div>
+                                                                     <input name="sender_shipment_save" type="submit" value="<?php echo $this->__('Save'); ?>" onclick="return senderShipmentSaveValid('<?php  echo $this->__('Please fill the Sender field'); ?>','<?php  echo $this->__('Please fill the Message field'); ?>');" class="button mrgn-right btn" />
+                                                                  </td>
+                                                               </tr>
+                                                            </table>
+                                                         </form>
+                                                      </div>
+                                                   </td>
+                                                </tr>
+                                                <tr>
+                                                   <td colspan="2" valign="top" border="0">
+                                                      <form method="post" action="<?php echo $this->getUrl('*/*/sendshipmenttest'); ?>" name="sender_order_testForm">
+                                                         <input name="form_key" type="hidden" value="<?php echo $formKey; ?>" />  
+                                                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                            <tr>
+                                                               <td valign="top" colspan="2">
+                                                                  <div class="hintmsg"><em><?php echo $this->__('Sending a test SMS will be deducted from your SMS credits.'); ?></em></div>
+                                                                  <label><?php echo $this->__('Send a test SMS'); ?></label>
+                                                                  <input name="sender_shipment_number" id="sender_shipment_number" maxlength="17" type="text" value="" class="input_bx" />
+                                                                  <span class="toolTip" title="<?php echo $this->__('The phone number should be in this form: 0033663309741 for this France mobile 06 63 30 97 41 (0033 is France prefix)'); ?>">&nbsp;</span>
+                                                                  <input name="sender_shipment_submit" type="button" value="<?php echo $this->__('Send'); ?>" onclick="return testShippedSmsSend('<?php  echo $this->__('Please fill the Sender field'); ?>','<?php  echo $this->__('Please fill the Message field'); ?>','<?php  echo $this->__('Please enter the valid Mobile Number'); ?>');" class="button btn"  />
+                                                               </td>
+                                                            </tr>
+                                                         </table>
+                                                      </form>
+                                                   </td>
+                                                </tr>
+                                             </table>
+                                          </div>
+                                    </td>
+                                 </tr>
+                              </table>
+                              </div> 
+                           </div>
+                        </div>
+                        <div id="tab3" class="tab_content">
+                           <div class="wrapper" style="margin-top:15px;">
+                              <table width="100%" border="0" cellspacing="0" cellpadding="0" class="form-list3">
+                                 <input name="campaign" type="hidden" id="campaign" value="<?php echo $this->getUrl('adminhtml/ajax/campaign'); ?>" />         
+                                 <tr>
+                                    <td class="row1 fix_width2">
+                                       <label class="r_label"><?php echo $this->__('Send a campaign SMS'); ?></label>
+                                       <div class="radio_bx">
+                                          <input name="sms_campaign_setting"  <?php if($campaignStatus == 1) { echo 'checked'; } ?> class="sms_campaign_setting radio_nospaceing" type="radio" value="1" />
+                                          <?php echo $this->__('Yes'); ?>
+                                          <input name="sms_campaign_setting"  <?php if($campaignStatus == 0) { echo 'checked'; } ?> class="sms_campaign_setting radio_spaceing2" type="radio" value="0" />
+                                          <?php echo $this->__('No'); ?>
+                                       </div>
+                                       <div class="hideCampaign">
+                                          <div class="form_table ">
+                                             <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                                                <tr>
+                                                   <td>
+                                                      <form method="post" action="<?php echo $this->getUrl('*/*/sendcampaign'); ?>" name="sender_campaign_form">
+                                                         <input name="form_key" type="hidden" value="<?php echo $formKey; ?>" /> 
+                                                         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="form-list3 no-padding" >
+                                                            <tr>
+                                                               <td class="fix_width2" valign="top"> <label><?php echo $this->__('To'); ?></label></td>
+                                                               <td>
+                                                                  <input name="Sendin_Sms_Choice" id="r1_Sendin_Sms_Choice" class="Sendin_Sms_Choice radio_nospaceing" type="radio" value="1" <?php if($shipingSmsStatus == 1) { echo 'checked'; } ?> />
+                                                                  <?php echo $this->__('A single contact'); ?>
+                                                                  <input name="Sendin_Sms_Choice" id="r2_Sendin_Sms_Choice" class="Sendin_Sms_Choice radio_spaceing2" type="radio" value="0" <?php if($shipingSmsStatus == 0) { echo 'checked'; } ?> />
+                                                                  <?php echo $this->__('All my Magento customers'); ?>
+                                                                  <input name="Sendin_Sms_Choice" id="r3_Sendin_Sms_Choice" class="Sendin_Sms_Choice radio_spaceing2" type="radio" value="2" <?php if($shipingSmsStatus == 0) { echo 'checked'; } ?> />
+                                                                  <?php echo $this->__('Only subscribed customers'); ?>
+                                                               </td>
+                                                            </tr>
+                                                            <script>
+                                                               jQuery('#r1_Sendin_Sms_Choice').attr('checked', true);
+                                                            </script>
+                                                            <tr>
+                                                               <td>
+                                                                  <h4 style="margin-top:0;"><?php echo $this->__('SMS settings'); ?></h4>
+                                                               </td>
+                                                               <td>&nbsp;</td>
+                                                            </tr>
+                                                            <tr class="singlechoice">
+                                                               <td valign="top"><label><?php echo $this->__('Phone number of the contact'); ?>
+                                                                  </label>
+                                                               </td>
+                                                               <td>
+                                                                  <input name="singlechoice" id="singlechoice" maxlength="17" type="text" value="" class="input_bx" /><span class="toolTip" title="<?php echo $this->__('The phone number should be in this form: 0033663309741 for this France mobile 06 63 30 97 41 (0033 is France prefix)'); ?>">&nbsp;</span>
+                                                               </td>
+                                                            </tr>
+                                                            <tr class='sib_datepicker' style="display:none;">
+                                                               <td valign="top"><label><?php echo $this->__('Schedule your sms campaign'); ?></label></td>
+                                                               <td>
+                                                                  <input name="sib_datetimepicker" class="input_bx Datepicker" id="sib_datetimepicker" type="text" value="" autocomplete="off" />&nbsp;&nbsp;
+                                                                  <select name="hour">
+                                                                     <option value='0'><?php echo $this->__('Hour'); ?></option>
+                                                                     <?php for($i=1;$i<=23;$i++){ ?>
+                                                                     <option><?php echo $i; ?></option>
+                                                                     <?php } ?>
+                                                                  </select>
+                                                                  &nbsp;&nbsp;
+                                                                  <select name="minute">
+                                                                     <option value='0'><?php echo $this->__('Minute'); ?></option>
+                                                                     <?php for($i=5;$i<=55;$i=$i+5){ ?>
+                                                                     <option><?php echo $i; ?></option>
+                                                                     <?php } ?>
+                                                                  </select>
+                                                               </td>
+                                                            </tr>
+                                                            <tr>
+                                                               <td valign="top"><label><?php echo $this->__('Sender'); ?></label></td>
+                                                               <td>
+                                                                  <input name="sender_campaign" maxlength="11" id="sender_campaign" type="text" value="" class="input_bx" autocomplete="off" />
+                                                                  <span class="toolTip" title="<?php echo $this->__('This field allows you to customize the SMS sender. The number of characters is limited to 11 alphanumeric characters. You can´t configure your Sender with a phone number.'); ?>">&nbsp;</span>
+                                                                  <div class="hintmsg"><em><?php echo $this->__('Number of characters left: '); ?><span id="sender_campaign_text">11</span></em>
+                                                                  </div>
+                                                               </td>
+                                                            </tr>
+                                                            <tr>
+                                                               <td valign="top"><label><?php echo $this->__('Message'); ?></label></td>
+                                                               <td>
+                                                                  <textarea name="sender_campaign_message" id="sender_campaign_message" cols="45" rows="5" class="textarea_bx"></textarea>
+                                                                  <span class="toolTip" style="float:left; margin-top: 85px;" title="<?php echo $this->__(' Create the content of your SMS with the limit of 160-character.Beyond 160 characters, it will be counted as a second SMS. Thus, if you write SMS of 240 characters, it will be recorded using two SMS.'); ?>">&nbsp;</span>
+                                                                  <span style="float:left; line-height:16px; margin-bottom:15px; width:470px; clear:both;">
+                                                                     <?php echo $this->__('Number of SMS used: '); ?><span id="sender_campaign_message_text_count">0</span>
+                                                                     <div class="hintmsg"><em><?php echo $this->__('Number of characters left: '); ?></em><span id="sender_campaign_message_text">160</span></div>
+                                                                     <div class="hintmsg"><em><?php echo $this->__('Attention line break is counted as a single character.'); ?></em>
+                                                                     </div>
+                                                                     <br>
+                                                                     <div class="hintmsg"><em><?php echo $this->__('If you want to personalize the SMS, you can use the variables below:'); ?></em></div>
+                                                                     <div class="hintmsg"><em><?php echo $this->__('- For first name use {first_name}'); ?></em></div>
+                                                                     <div class="hintmsg"><em><?php echo $this->__('- For last name use {last_name}'); ?></em></div>
+                                                                     <input type="submit"  class="button mrgn-right btn" value="<?php echo $this->__('Send the campaign'); ?>" name="sender_campaign_save" onclick="return senderCampaignSaveValid('<?php  echo $this->__('Please fill the Sender field'); ?>','<?php  echo $this->__('Please fill the Message field'); ?>','<?php  echo $this->__('Please enter the valid Mobile Number'); ?>');"">
+                                                               </td>
+                                                            </tr>
+                                                         </table>
+                                                      </form>
+                                                      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="form-data">
+                                                      <tr>
+                                                      <td>
+                                                      <div class="hintmsg"><em><?php echo $this->__('Sending a test SMS will be deducted from your SMS credits.'); ?></em></div>
+                                                      <label><?php echo $this->__('Send a test SMS'); ?></label>
+                                                      <input name="sender_campaigntest_number" id="sender_campaigntest_number" maxlength="17" type="text" value="" class="input_bx" />
+                                                      <span class="toolTip" title="<?php echo $this->__('The phone number should be in this form: 0033663309741 for this France mobile 06 63 30 97 41 (0033 is France prefix)'); ?>">&nbsp;</span>
+                                                      <input name="sender_campaignsms_submit" type="button" value="<?php echo $this->__('Send'); ?>" onclick="return testCampaignSmsSend('<?php  echo $this->__('Please fill the Sender field'); ?>','<?php  echo $this->__('Please fill the Message field'); ?>','<?php  echo $this->__('Please fill the Mobile Phone field'); ?>');" class="button btn"  />
+                                                      <input type="hidden" name="smsCampError" id="smsCampError" style="display:none;" value="<?php echo  $this->__('Message has not been sent successfully'); ?>"><input type="hidden"  id="smsCampSuccess" name="smsCampSuccess" value="<?php echo  $this->__('Message has been sent successfully'); ?>">
+                                                      </td>
+                                                      </tr>
+                                                      </table>
+                                                   </td>
+                                                </tr>
+                                             </table>
+                                          </div>
+                                          </span>
+                                    </td>
+                                 </tr>
+                              </table>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+   </fieldset>
+</div>
+<?php  if($getSyncronize == 1) { ?>
+<div class="sendin_row alldiv" <?php echo $style; ?> >
+   <fieldset id="my-fieldset" class="fields">
+      <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif"> <?php echo $this->__('Contacts list'); ?> </legend>
+      <input name="ajaxcontentUrl" type="hidden" id="ajaxcontentUrl" value="<?php echo $this->getUrl('adminhtml/ajax/ajaxcontent'); ?>" />
+      <input name="ajaxUrl" type="hidden" id="ajaxUrl" value="<?php echo $this->getUrl('adminhtml/ajax/ajaxupdate'); ?>" />
+      <input name="ajaxOrderSmsUrl" type="hidden" id="ajaxOrderSmsUrl" value="<?php echo $this->getUrl('adminhtml/ajax/ajaxordersms'); ?>" />
+      <input name="ajaxOrderShippedUrl" type="hidden" id="ajaxOrderShippedUrl" value="<?php echo $this->getUrl('adminhtml/ajax/ajaxordershipped'); ?>" />
+      <input name="ajaxSmsCampaignUrl" type="hidden" id="ajaxSmsCampaignUrl" value="<?php echo $this->getUrl('adminhtml/ajax/ajaxsmscampaign'); ?>" />
+      <input name="ajaxSmsSubscribeUrl" type="hidden" id="ajaxSmsSubscribeUrl" value="<?php echo $this->getUrl('adminhtml/ajax/ajaxsmssubscribe'); ?>" />
+      <input type="hidden" name="pagenumber" id="pagenumber" value="1" /> 
+      <div id="userGrid">
+         <div class="grid">
+            <div class="hor-scroll">
+               <?php echo $this->__('You have '); ?> <?php  echo $viewData['newsletterSubscribeCount']; ?>
+               <?php echo $this->__(' contacts subscribed and '); ?> 
+               <?php echo $viewData['newsletterUnSubscribeCount']; ?> 
+               <?php echo $this->__(' contacts unsubscribed from Magento.'); ?><span id="Spantextmore" >
+               <?php echo $this->__(' For more details,'); ?></span><span id="Spantextless" style="display: none;" >
+               <?php echo $this->__(' For less details,'); ?></span><b>
+               <a href="javascript:void(0);" id="showUserlist" style="color: #000000; outline: 0 none; text-decoration: none;"><?php echo $this->__('click here'); ?></a></b>
+               <br><br>
+               <table cellspacing="0" id="userGrid_table " class="data userDetails" style='display:none;'>
+                  <thead>
+                     <tr class="headings">
+                        <th class="no-link"><span class="nobr"><?php echo $this->__('Email'); ?></span></th>
+                        <th class="no-link"><span class="nobr"><?php echo $this->__('clients'); ?></span></th>
+                        <th class="no-link"><span class="nobr"><?php echo $this->__('SMS'); ?></span></th>
+                        <th class="no-link"><span class="nobr"><?php echo $this->__('Newsletter Magento Status'); ?></span></th>
+                        <th class="no-link"><span class="nobr"><?php echo $this->__('Newsletter SendinBlue Status'); ?><span title="<?php echo $this->__('Click on the icon to subscribe / unsubscribe the contact from SendinBlue and Magento.'); ?>" class="toolTip">&nbsp;</span></span></th>
+                        <th class="no-link last"><span class="nobr"><?php echo $this->__('SMS SendinBlue Status'); ?><span title="<?php echo $this->__('Click on the icon to subscribe / unsubscribe the sms from SendinBlue and Magento.'); ?>" class="toolTip">&nbsp;</span></span></th>
+                     </tr>
+                  </thead>
+                  <tbody class='midleft'>
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </div>
+   </fieldset>
+</div>
+<?php  }} ?>
