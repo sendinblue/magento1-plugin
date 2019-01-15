@@ -396,6 +396,38 @@
       </fieldset>
    </div>
 </div>
+<div class="sendin_row alldiv" <?php echo $style; ?> >
+   <div class="section-config active"> 
+      <input type="hidden" name="automsg" id="automsg" value="<?php echo $this->__('Your Marketing Automation script will be uninstalled, you would not have access to any Marketing Automation data and workflows');?>" />          
+      <input name="automationUrl" type="hidden" id="automationUrl" value="<?php echo $this->getUrl('adminhtml/ajax/automationpost'); ?>" />          
+      <fieldset id="my-fieldset" class="fields">
+         <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif"> <?php echo $this->__('Automation'); ?> </legend>
+         <table cellspacing="0" class="form-list">
+            <tr>
+               <td class="fix_width"><label><?php echo $this->__('Activate Marketing Automation through SendinBlue'); ?></label></td>
+               <td class="input-ele">
+                  <input type="radio" <?php if($automationStatus == 1) { echo 'checked'; } ?>  name="Automation" class='radio_nospaceing' value="1" /> <?php echo $this->__('Yes'); ?>
+                  <input  type="radio" <?php if($automationStatus == 0) { echo 'checked'; } ?> name="Automation" class='radio_spaceing2' value="0" /> <?php echo $this->__('No'); ?>
+                  <span title="<?php echo $this->__('Choose Yes if you want to use SendinBlue Automation to track your website activity'); ?>" class="toolTip">&nbsp;</span>
+               </td>   
+            </tr>
+            <tr>
+               <td class="fix_width">
+                  <label>
+                  <a style="color:#268CCD;" href="https://resources.sendinblue.com/en/introduction-marketing-automation/?utm_source=prestashop_plugin&utm_medium=plugin&utm_campaign=module_link"><?php echo $this->__('Explore our resource')?></a>
+                  <?php echo $this->__('to learn more about SendinBlue Automation'); ?>                                
+                  </label>
+               </td>
+               <td class='a_right'>
+                  <div class='btnmrgn-right'>
+                     <input type="submit" style="align:right;" class="AutomationSubmit btn"  name="AutomationSubmit"  value ="<?php echo $this->__('Validate'); ?>" />
+                  </div>
+               </td>
+            </tr>
+         </table>
+      </fieldset>
+   </div>
+</div>
 <div class="sendin_row hidetableblock" <?php echo $style; ?> >
    <fieldset class="fields">
       <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif">
