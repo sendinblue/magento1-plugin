@@ -604,11 +604,11 @@ jQuery.ajax({
 });
 jQuery(".AutomationSubmit").click(function()
 	{
-		var Automation = jQuery("input[name='Automation']:checked").val();
+		var automationEnableStatus = jQuery("input[name='Automation']:checked").val();
 		var automationUrl = jQuery("#automationUrl").val();
 		var automsg = jQuery('#automsg').val();
 
-		if (Automation == 0) {
+		if (automationEnableStatus == 0) {
 			var resp = confirm(automsg);
 			if (resp === false) {
 				return;
@@ -618,7 +618,7 @@ jQuery(".AutomationSubmit").click(function()
 			type : "POST",
 			async : false,
 			url : automationUrl,
-			data : "script=" + Automation,
+			data : "script=" + automationEnableStatus,
 			beforeSend : function(){
 				jQuery('#ajax-busy').show();
 			},
