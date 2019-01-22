@@ -602,7 +602,31 @@ jQuery.ajax({
 	}
 });
 });
+jQuery(".AutomationSubmit").click(function()
+	{
+		var automationEnableStatus = jQuery("input[name='Automation']:checked").val();
+		var automationUrl = jQuery("#automationUrl").val();
+		var automsg = jQuery('#automsg').val();
 
+		if (automationEnableStatus == 0) {
+			var resp = confirm(automsg);
+			if (resp === false) {
+				return;
+			}
+		}
+		jQuery.ajax({
+			type : "POST",
+			async : false,
+			url : automationUrl,
+			data : "script=" + automationEnableStatus,
+			beforeSend : function(){
+				jQuery('#ajax-busy').show();
+			},
+			success : function(msg){
+				jQuery('#ajax-busy').hide();
+			}
+		});
+	});
 var skin_url = jQuery('#skin_url').val()
 	jQuery('<div id="ajax-busy"/> loading..')
 	.css(

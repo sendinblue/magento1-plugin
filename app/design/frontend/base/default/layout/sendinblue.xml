@@ -1,5 +1,14 @@
 <?xml version="1.0"?>
 <layout version="1.1.0">
+    <default>
+        <reference name="head">
+            <block type="core/text" name="automation.block"> 
+                <action method="addText" ifconfig="sendinblue/tracking/automationscript"> 
+                <txt helper="sendinblue/data/getAutomationScript" />
+                </action> 
+            </block>        
+        </reference>
+    </default>
     <checkout_onepage_success>
         <reference name="before_body_end">
             <block ifconfig="sendinblue/tracking/code" type="sendinblue/sendinblue" name="sendinblue.sendinblue" />

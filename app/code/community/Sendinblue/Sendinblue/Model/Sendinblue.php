@@ -1349,6 +1349,9 @@ class Sendinblue_Sendinblue_Model_Sendinblue extends Mage_Core_Model_Abstract
         $sendinSwitch->saveConfig('sendinblue/smtp/ssl', '');
         $sendinSwitch->saveConfig('sendinblue/smtp/option', '');
         $sendinSwitch->saveConfig('sendinblue/tracking/code', '');
+        $sendinSwitch->saveConfig('sendinblue/tracking/automationscript', '');
+        $sendinSwitch->saveConfig('sendinblue/automation/enabled', '');
+        $sendinSwitch->saveConfig('sendinblue/automation/key', '');
     }
     
     protected function _uninstallResourceDb($version)
