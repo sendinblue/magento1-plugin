@@ -136,8 +136,8 @@ jQuery(document)
 				}
 				else{
 					jQuery("#sender_order").attr('maxlength','11');
-					var str7 = val.length > 11 ? val.substr(1,11) : val;						
-					jQuery("#sender_order").val(str7);
+					var str_val = val.length > 11 ? val.substr(1,11) : val;						
+					jQuery("#sender_order").val(str_val);
 					jQuery('#sender_order_text').text((11 - val.length));	
 					 
 				}
@@ -149,19 +149,19 @@ jQuery(document)
                 }
 				});	
              
-            
-            if(jQuery('#sender_order').val() != '')
+            var sender_order = jQuery('#sender_order');
+			var sender_order_val = sender_order.val();
+            if(sender_order_val)
 			{
-				var val = jQuery('#sender_order').val();
-				 if(isInteger(val)){
-					jQuery("#sender_order").attr('maxlength','11');
-					jQuery('#sender_order_text').text((11 - val.length));
-					 
-				}
-				else{
-					jQuery("#sender_order").attr('maxlength','11');
-					jQuery('#sender_order_text').text((11 - val.length));
-				}
+				if(isInteger(sender_order_val)){
+						jQuery("#sender_order").attr('maxlength','11');
+						jQuery('#sender_order_text').text((11 - sender_order_val.length));
+						 
+					}
+					else{
+						jQuery("#sender_order").attr('maxlength','11');
+						jQuery('#sender_order_text').text((11 - sender_order_val.length));
+					}
 			}
 
             jQuery('#sender_order_message').keyup(function () {
@@ -173,10 +173,11 @@ jQuery(document)
 
                 jQuery('#sender_order_message_text_count').text(messages);
             });
-            
-			if(jQuery('#sender_order_message').val() != '')
+            var sender_order_message = jQuery('#sender_order_message');
+            var sender_order_message_val = sender_order_message.val();
+			if(sender_order_message_val)
 			{
-				var chars = jQuery('#sender_order_message').val().length,
+				var chars = sender_order_message_val.length,
 				messages = Math.ceil(chars / 160),
 				remaining = messages * 160 - chars;
 				
@@ -220,14 +221,17 @@ jQuery(document)
 
              if(jQuery('#sender_shipment').val() != '')
 			{
-				var val = jQuery('#sender_shipment').val();
-				 if(isInteger(val)){
-					jQuery("#sender_shipment").attr('maxlength','11');
-					jQuery('#sender_shipment_text').text((11 - val.length));					 
-				}
-				else{
-					jQuery("#sender_shipment").attr('maxlength','11');
-					jQuery('#sender_shipment_text').text((11 - val.length));					 
+				var sender_shipment = jQuery('#sender_shipment');
+				var sender_shipment_val = sender_shipment.val();
+				if (sender_shipment_val) {
+					if(isInteger(sender_shipment_val)){
+						jQuery("#sender_shipment").attr('maxlength','11');
+						jQuery('#sender_shipment_text').text((11 - sender_shipment_val.length));					 
+					}
+					else{
+						jQuery("#sender_shipment").attr('maxlength','11');
+						jQuery('#sender_shipment_text').text((11 - sender_shipment_val.length));					 
+					}
 				}
 			}
 
@@ -241,9 +245,11 @@ jQuery(document)
                 jQuery('#sender_shipment_message_text_count').text(messages);                
             });
 
-            if(jQuery('#sender_shipment_message').val() != '')
+			var sender_shipment_message = jQuery('#sender_shipment_message');
+			var sender_shipment_message_val = sender_shipment_message.val()
+            if(sender_shipment_message_val)
 			{
-				var chars = jQuery('#sender_shipment_message').val().length,
+				var chars = sender_shipment_message_val.length,
 				messages = Math.ceil(chars / 160),
 				remaining = messages * 160 - chars;
 				
@@ -286,16 +292,17 @@ jQuery(document)
                 }
 				});
 
-            if(jQuery('#sender_campaign').val() != '')
-			{
-				var val = jQuery('#sender_campaign').val();				
+			var sender_campaign = jQuery('#sender_campaign');
+			var sender_campaign_val = sender_campaign.val();
+            if(sender_campaign_val)
+			{				
 				if(isInteger(val)){
 					jQuery("#sender_campaign").attr('maxlength','11');
-					jQuery('#sender_campaign_text').text((11 - val.length));
+					jQuery('#sender_campaign_text').text((11 - sender_campaign_val.length));
 				}
 				else{
 					jQuery("#sender_campaign").attr('maxlength','11');
-					jQuery('#sender_campaign_text').text((11 - val.length));
+					jQuery('#sender_campaign_text').text((11 - sender_campaign_val.length));
 				}
 			}
             
@@ -309,9 +316,11 @@ jQuery(document)
                 jQuery('#sender_campaign_message_text_count').text(messages);              
             });
 
-            if(jQuery('#sender_campaign_message').val() != '')
+			var sender_campaign_message = jQuery('#sender_campaign_message');
+			var sender_campaign_message_val = sender_campaign_message.val();
+            if(sender_campaign_message_val)
 			{
-				var chars = jQuery('#sender_campaign_message').val().length,
+				var chars = sender_campaign_message_val.length,
 				messages = Math.ceil(chars / 160),
 				remaining = messages * 160 - (chars % (messages * 160) || messages * 160);
 				
@@ -602,31 +611,30 @@ jQuery.ajax({
 	}
 });
 });
-jQuery(".AutomationSubmit").click(function()
-	{
-		var automationEnableStatus = jQuery("input[name='Automation']:checked").val();
-		var automationUrl = jQuery("#automationUrl").val();
-		var automsg = jQuery('#automsg').val();
+jQuery(".AutomationSubmit").click(function() {
+var automationEnableStatus = jQuery("input[name='Automation']:checked").val();
+var automationUrl = jQuery("#automationUrl").val();
+var automsg = jQuery('#automsg').val();
 
-		if (automationEnableStatus == 0) {
-			var resp = confirm(automsg);
-			if (resp === false) {
-				return;
-			}
-		}
-		jQuery.ajax({
-			type : "POST",
-			async : false,
-			url : automationUrl,
-			data : "script=" + automationEnableStatus,
-			beforeSend : function(){
-				jQuery('#ajax-busy').show();
-			},
-			success : function(msg){
-				jQuery('#ajax-busy').hide();
-			}
-		});
-	});
+if (automationEnableStatus == 0) {
+    var resp = confirm(automsg);
+    if (resp === false) {
+        return;
+    }
+}
+jQuery.ajax({
+    type : "POST",
+    async : false,
+    url : automationUrl,
+    data : "script=" + automationEnableStatus,
+    beforeSend : function(){
+        jQuery('#ajax-busy').show();
+    },
+    success : function(msg){
+        jQuery('#ajax-busy').hide();
+    }
+});
+});
 var skin_url = jQuery('#skin_url').val()
 	jQuery('<div id="ajax-busy"/> loading..')
 	.css(

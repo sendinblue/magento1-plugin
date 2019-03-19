@@ -837,24 +837,37 @@ class Sendinblue_Sendinblue_Adminhtml_AjaxController extends Mage_Core_Controlle
                 $apiKeyStatus = $sendinModule->checkApikey($getKey);
                 if (empty($apiKeyStatus['error'])) {
                     $sendinSwitch->saveConfig('sendinblue/tracking/automationscript', $postData['script']);
-                    $smtpResponse = $sendinModule->trackingSmtp(); // get tracking code
-                    if (isset($smtpResponse['data']['marketing_automation']['key']) && $smtpResponse['data']['marketing_automation']['enabled'] == 1) {
-                        $sendinSwitch->saveConfig('sendinblue/automation/enabled', $smtpResponse['data']['marketing_automation']['enabled'], 'default', 0);
-                        $sendinSwitch->saveConfig('sendinblue/automation/key', $smtpResponse['data']['marketing_automation']['key'], 'default', 0);
-                        echo $this->__('Your setting has been successfully saved');
+                    if($postData['script']) {
+                        $smtpResponse = $sendinModule->trackingSmtp(); // get tracking code
+                        if (isset($smtpResponse['data']['marketing_automation']['key']) && $smtpResponse['data']['marketing_automation']['enabled'] == 1) {
+                            $sendinSwitch->saveConfig('sendinblue/automation/enabled', $smtpResponse['data']['marketing_automation']['enabled'], 'default', 0);
+                            $sendinSwitch->saveConfig('sendinblue/automation/key', $smtpResponse['data']['marketing_automation']['key'], 'default', 0);
+                            $msg = $this->__('Your setting has been successfully saved');
+                            Mage::app()->getResponse()->setHeader('Content-type', 'application/text');
+                            Mage::app()->getResponse()->setBody($msg);
+                        }
+                        else {
+                            $sendinSwitch->saveConfig('sendinblue/tracking/automationscript', 0);
+                            $msg = $this->__("To activate Marketing Automation , please go to your SendinBlue's account or contact us at contact@sendinblue.com");
+                            Mage::app()->getResponse()->setHeader('Content-type', 'application/text');
+                            Mage::app()->getResponse()->setBody($msg);
+                        }
                     }
                     else {
-                        $sendinSwitch->saveConfig('sendinblue/tracking/automationscript', 0);
-                        echo $this->__('Your Marketing automation account is not activated and therefore you can\'t use SendinBlue SMTP. For more informations, please contact our support to: contact@sendinblue.com');
+                        $msg = $this->__('Your setting has been successfully saved');
+                        Mage::app()->getResponse()->setHeader('Content-type', 'application/text');
+                        Mage::app()->getResponse()->setBody($msg); 
                     }
                 }
-                else if(isset($responce['error'])) {
-                    echo $this->__('You have entered wrong api key');
+                else {
+                    $msg = $this->__('You have entered wrong api key');
+                    Mage::app()->getResponse()->setHeader('Content-type', 'application/text');
+                    Mage::app()->getResponse()->setBody($msg);
                 }
             }
         }
         catch (Exception $exception) {
-            echo $this->__($exception->getMessage());
+            $this->__($exception->getMessage());
         }
     }
 }

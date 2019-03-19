@@ -51,6 +51,9 @@ class Sendinblue_Sendinblue_Helper_Data extends Mage_Core_Helper_Abstract
     
     public function getAutomationScript()
     {
+        if(Mage::helper('sendinblue')->ModuleisEnabled() == 0){
+            return '';
+        }
         $email = '';
         $clientId = Mage::getStoreConfig('sendinblue/automation/key');
         if (Mage::getSingleton('customer/session')->isLoggedIn()) {
