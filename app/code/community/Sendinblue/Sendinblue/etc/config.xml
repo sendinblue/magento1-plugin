@@ -11,7 +11,7 @@
             <system>
                 <children>
                     <mails translate="title" module="sendinblue">
-                        <title>SendinBlue Settings</title>
+                        <title>Sendinblue Settings</title>
                         <action>adminhtml/myform</action>
                         <sort_order>0</sort_order>
                     </mails>
