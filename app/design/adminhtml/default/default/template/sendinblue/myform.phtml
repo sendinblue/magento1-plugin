@@ -75,6 +75,7 @@
    $apiKey = $viewData['apiKey'];
    $getSyncronize = $viewData['getSyncronize'];
    $trackStatus = $viewData['trackStatus'];
+   $automationStatus = $viewData['automationStatus'];
    $trackingHistory = $viewData['trackingHistory'];
    $notifySmsStatus = $viewData['notifySmsStatus'];
    $orderSmsStatus = $viewData['orderSmsStatus'];
@@ -88,7 +89,7 @@
          <?php echo $this->__('Prerequisites'); ?>
       </legend>
       <span><?php echo $this->__('- You should have a SendinBlue account. You can create a free account here:'); ?> 
-      <a href="<?php echo $this->__('https://www.sendinblue.com?utm_source=magento_plugin&utm_medium=plugin&utm_campaign=module_link'); ?>" target="_blank" style="text-decoration: none; color: #268CCD;">
+      <a href="<?php echo $this->__('https://app.sendinblue.com/account/register/?utm_source=magento_plugin&utm_medium=plugin&utm_campaign=module_link'); ?>" target="_blank" style="text-decoration: none; color: #268CCD;">
       &nbsp;<?php echo $this->__('https://www.sendinblue.com'); ?></a><br></span>
    </fieldset>
 </div>
@@ -202,7 +203,7 @@
                                                    $templatelist = isset($viewData['templatelist']) ? $viewData['templatelist'] : array();
                                                    if (!empty($templatelist['data']['campaign_records'])) {
                                                        foreach ($templatelist['data']['campaign_records'] as $template_data) { 
-                                                           if (isset($template_data['templ_status']) && $template_data['templ_status'] === 'Active' && stristr($template_data['html_content'], 'DOUBLEOPTIN') === false) { ?>
+                                                           if (isset($template_data['templ_status']) && $template_data['templ_status'] === 'Active' && stristr($template_data['html_content'], 'doubleoptin') === false) { ?>
                                                 <option value="<?php echo $template_data['id']; ?>" <?php if(isset($viewData['sendinTemplateId']) && $template_data['id'] == $viewData['sendinTemplateId']) echo 'selected = "selected"'; ?> ><?php echo $template_data['campaign_name']; ?></option>
                                                 <?php 
                                                    }
@@ -237,7 +238,7 @@
                                                 $templatelist = isset($viewData['templatelist']) ? $viewData['templatelist'] : array();
                                                 if (!empty($templatelist['data']['campaign_records'])) {
                                                     foreach ($templatelist['data']['campaign_records'] as $template_data) { 
-                                                        if (isset($template_data['templ_status']) && $template_data['templ_status'] === 'Active' && stristr($template_data['html_content'], '[DOUBLEOPTIN]')) {
+                                                        if (isset($template_data['templ_status']) && $template_data['templ_status'] === 'Active' && stristr($template_data['html_content'], 'doubleoptin')) {
                                                 ?>                        
                                              <option value="<?php echo $template_data['id']; ?>" <?php if(isset($viewData['sendinDoubleoptinTemplateId']) && $template_data['id'] == $viewData['sendinDoubleoptinTemplateId']) echo 'selected = "selected"'; ?> ><?php echo $template_data['campaign_name']; ?></option>
                                              <?php   
@@ -277,7 +278,7 @@
                                                       $templatelist = $viewData['templatelist'];
                                                       if (!empty($templatelist['data']['campaign_records'])) {
                                                           foreach ($templatelist['data']['campaign_records'] as $template_data) {
-                                                              if (isset($template_data['templ_status']) && $template_data['templ_status'] === 'Active' && stristr($template_data['html_content'], 'DOUBLEOPTIN') === false) { 
+                                                              if (isset($template_data['templ_status']) && $template_data['templ_status'] === 'Active' && stristr($template_data['html_content'], 'doubleoptin') === false) { 
                                                       ?>                        
                                                    <option value="<?php echo $template_data['id']; ?>" <?php if(isset($viewData['sendinTemplateFinal']) && $template_data['id'] == $viewData['sendinTemplateFinal']) echo 'selected = "selected"'; ?> ><?php echo $template_data['campaign_name']; ?></option>
                                                    <?php   

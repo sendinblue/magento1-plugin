@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <package>
-    <name>Sendinblue</name>
-    <version>1.4.1</version>
+    <name>sendinblue+Sendinblue</name>
+    <version>1.4.2</version>
     <stability>stable</stability>
     <license uri="http://opensource.org/licenses/osl-3.0.php">OSL v3.0</license>
-    <channel>community</channel>
+    <channel>1f027651b66123bd9189bc1e6117dc81</channel>
     <extends/>
     <summary>Synchronize your Magento contacts with SendinBlue platform, easily send your marketing and transactional emails and SMS.</summary>
     <description>With the SendinBlue plugin, you can find everything you need to easily and efficiently send your email and SMS campaigns to your prospects and customers.&#xD;
