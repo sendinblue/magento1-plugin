@@ -474,11 +474,14 @@ class Sendinblue_Sendinblue_Model_Sendinblue extends Mage_Core_Model_Abstract
             if (empty($listId)) {
                 if (isset($sendinConfirmType) && $sendinConfirmType === 'doubleoptin') {
                     $listId = Mage::getStoreConfig('sendinblue/SendinOptinListId');
+                    $extra['DOUBLE_OPT-IN'] = 2;
+                    $attributesName['DOUBLE_OPT-IN'] = 'DOUBLE_OPT-IN';
                 } 
                 else {
                     $listId = $this->listsIds;
                 }
             }
+            
             $userData = array();
             $userData['email'] = $email;
             $userData['id'] = '';
@@ -1352,6 +1355,7 @@ class Sendinblue_Sendinblue_Model_Sendinblue extends Mage_Core_Model_Abstract
         $sendinSwitch->saveConfig('sendinblue/tracking/automationscript', '');
         $sendinSwitch->saveConfig('sendinblue/automation/enabled', '');
         $sendinSwitch->saveConfig('sendinblue/automation/key', '');
+
     }
     
     protected function _uninstallResourceDb($version)
@@ -1501,12 +1505,18 @@ class Sendinblue_Sendinblue_Model_Sendinblue extends Mage_Core_Model_Abstract
                 $doubleoptinRedirectUrl = Mage::getBaseUrl();
                 $sendinFinalConfirmEmail = $this->getSendinFinalConfirmEmail();
                 $getFinalTemplateId = $this->getFinalTemplate();
+                $searchValue = "({{\s*doubleoptin\s*}})";
 
                 $from = array($senderEmail, $senderName);
                 $htmlContent = str_replace('{title}', $subject, $htmlContent);
                 $htmlContent = str_replace('https://[DOUBLEOPTIN]', $pathResponce, $htmlContent);
                 $htmlContent = str_replace('http://[DOUBLEOPTIN]', $pathResponce, $htmlContent);
+                $htmlContent = str_replace('https://{{doubleoptin}}', $pathResponce, $htmlContent);
+                $htmlContent = str_replace('http://{{doubleoptin}}', $pathResponce, $htmlContent);
+                $htmlContent = str_replace('https://{{ doubleoptin }}', $pathResponce, $htmlContent);
+                $htmlContent = str_replace('http://{{ doubleoptin }}', $pathResponce, $htmlContent);
                 $htmlContent = str_replace('[DOUBLEOPTIN]', $pathResponce, $htmlContent);
+                $htmlContent = preg_replace($searchValue, $pathResponce, $htmlContent);
                 $headers = array("Content-Type"=> "text/html;charset=iso-8859-1", "X-Mailin-tag"=>$transactionalTags );
                 $sendMailData = array( "to" => array("$to" => ""),
                     "from" => $from,

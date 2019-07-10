@@ -167,7 +167,7 @@ class Sendinblue_Sendinblue_Adminhtml_AjaxController extends Mage_Core_Controlle
                     $objPsmailin = Mage::getModel('sendinblue/psmailin',$apiDetails);
 
                     $userData = array( "email" => $subScriberEmail,
-                        "attributes" => array(),
+                        "attributes" => array("DOUBLE_OPT-IN"=>1),
                         "blacklisted" => 0,
                         "listid" => (is_array($listId)) ? $listId : array($listId),
                         "listid_unlink" => array($doubleOptinId),
