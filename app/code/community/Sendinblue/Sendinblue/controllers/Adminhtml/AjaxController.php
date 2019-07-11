@@ -325,7 +325,7 @@ class Sendinblue_Sendinblue_Adminhtml_AjaxController extends Mage_Core_Controlle
                         Mage::app()->getResponse()->setBody($msg);
                     } else {
                         $sendinSwitch->saveConfig('sendinblue/smtp/status', 0);
-                        $msg = $this->__('Your SMTP account is not activated and therefore you can\'t use SendinBlue SMTP. For more informations, please contact our support to: contact@sendinblue.com');
+                        $msg = $this->__('Your SMTP account is not activated and therefore you can\'t use Sendinblue SMTP. For more informations, please contact our support to: contact@sendinblue.com');
                         Mage::app()->getResponse()->setHeader('Content-type', 'application/text');
                         Mage::app()->getResponse()->setBody($msg);
                     }
@@ -848,7 +848,7 @@ class Sendinblue_Sendinblue_Adminhtml_AjaxController extends Mage_Core_Controlle
                         }
                         else {
                             $sendinSwitch->saveConfig('sendinblue/tracking/automationscript', 0);
-                            $msg = $this->__("To activate Marketing Automation , please go to your SendinBlue's account or contact us at contact@sendinblue.com");
+                            $msg = $this->__("To activate Marketing Automation , please go to your Sendinblue's account or contact us at contact@sendinblue.com");
                             Mage::app()->getResponse()->setHeader('Content-type', 'application/text');
                             Mage::app()->getResponse()->setBody($msg);
                         }

@@ -1024,12 +1024,12 @@ class Sendinblue_Sendinblue_Model_Sendinblue extends Mage_Core_Model_Abstract
                 $localeCode = Mage::app()->getLocale()->getLocaleCode();
                 $emailTemplateVariables = array();
 
-                $emailTemplateVariables['text0'] = '[SendinBlue] Alert: You do not have enough credits SMS';
+                $emailTemplateVariables['text0'] = '[Sendinblue] Alert: You do not have enough credits SMS';
                 $senderName = 'SendinBlue';
                 $senderEmail = 'contact@sendinblue.com';
 
                 if ($localeCode == 'fr_FR') {
-                    $emailTemplateVariables['text0'] = ' [SendinBlue] Alerte: Vos crédits SMS seront bientôt épuisés';
+                    $emailTemplateVariables['text0'] = ' [Sendinblue] Alerte: Vos crédits SMS seront bientôt épuisés';
                     $senderName = 'SendinBlue';
                     $senderEmail = 'contact@sendinblue.com';
                 }
@@ -1087,7 +1087,7 @@ class Sendinblue_Sendinblue_Model_Sendinblue extends Mage_Core_Model_Abstract
         $localeCode = Mage::app()->getLocale()->getLocaleCode();
         $emailTemplateVariables = array();
 
-        $emailTemplateVariables['text0'] = '[SendinBlue SMTP] test email';
+        $emailTemplateVariables['text0'] = '[Sendinblue SMTP] test email';
         $senderName = 'SendinBlue';
         $senderEmail = 'contact@sendinblue.com';
 
