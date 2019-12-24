@@ -9,7 +9,7 @@
 		                <config>
 		                    <children>
 		                        <sendinblue translate="title" module="sendinblue">
-		                            <title>SendinBlue Settings</title>
+		                            <title>Sendinblue Settings</title>
 		                        </sendinblue>
 		                    </children>
 		                </config>

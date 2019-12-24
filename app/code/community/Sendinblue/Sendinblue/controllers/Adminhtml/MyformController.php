@@ -235,11 +235,12 @@ class Sendinblue_Sendinblue_Adminhtml_MyformController extends Mage_Adminhtml_Co
             $sendinSwitch = Mage::getModel('core/config');
             if (!empty($requestParameter['importoldSubmit'])) {
                 $list = $sendinModule->getUserlists();
-                $listId = str_replace('|', ',', $list);
+                $listId = explode('|', $list);
                 $allemail = $sendinModule->getcustomers();
                 if ($allemail > 0) {
+                    $fileName = Mage::getStoreConfig('sendinblue/CsvFileName');
                     $userData = array();
-                    $userData['url'] = Mage::getBaseUrl('media').'sendinblue_csv/ImportSubUsersToSendinblue.csv';
+                    $userData['url'] = Mage::getBaseUrl('media').'sendinblue_csv/'.$fileName.'.csv';
                     $userData['listids'] = $listId;
                     $userData['notify_url'] = Mage::getBaseUrl().'sendinblue/ajax/emptySubsUserToSendinblue';
                     $apiDetails['api_key'] = $sendinModule->getApiKey();
@@ -352,7 +353,7 @@ class Sendinblue_Sendinblue_Adminhtml_MyformController extends Mage_Adminhtml_Co
                     } 
                     else {
                         $sendinSwitch->saveConfig('sendinblue/smtp/status', 0);
-                        $message = $this->__('Your SMTP account is not activated and therefore you can not use SendinBlue SMTP. For more informations, Please contact our support to: contact@sendinblue.com');
+                        $message = $this->__('Your SMTP account is not activated and therefore you can not use Sendinblue SMTP. For more informations, Please contact our support to: contact@sendinblue.com');
                         Mage::getModel('adminhtml/session')->addError($message);
                     }
                 } 

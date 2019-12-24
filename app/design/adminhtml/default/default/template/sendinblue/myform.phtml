@@ -15,7 +15,10 @@
 </script>
 <?php 
    $skinUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN);
-   ?>
+   $newIconSvg = '<svg viewBox="0 0 512 512" style="width:16px !important; height:16px !important; display:inline !important;padding: 0 2px 0 0 !important;vertical-align: top !important">
+   <path fill="#0091fe" d="M473.722 127.464c-18.027-31.901-48.272-55.215-83.865-64.647a142.257 142.257 0 0 0-22.471-3.885C342.065 22.06 300.026 0 255.08 0c-44.944 0-86.983 22.06-112.304 58.932C98.157 63.142 58.4 88.68 36.24 127.365a139.082 139.082 0 0 0-5.316 127.402 139.674 139.674 0 0 0 5.316 127.104c18.053 31.879 48.287 55.184 83.865 64.647a130.245 130.245 0 0 0 22.973 3.885c25.261 36.958 67.322 59.087 112.304 59.087 44.983 0 87.043-22.13 112.305-59.087 44.638-4.161 84.414-29.71 106.536-68.433a138.588 138.588 0 0 0 5.317-127.402 139.379 139.379 0 0 0-5.818-127.104zm-33.861 20.14c10.8 18.89 14.88 40.769 11.6 62.186a140.27 140.27 0 0 0-24.015-17.568c-31.777-18.423-69.787-23.497-105.428-14.074-21.674 5.722-41.612 16.51-58.107 31.442-6.093-38.506 12.271-76.783 46.404-96.722 21.403-12.61 47.09-16.21 71.235-9.981 24.815 6.533 45.86 22.673 58.31 44.717zM254.813 44.955c21.153.117 41.612 7.52 57.892 20.948a140.215 140.215 0 0 0-27.272 12.04c-50.843 30.193-76.605 89.302-63.996 146.832-35.486-14.33-58.666-48.648-58.581-86.729-.22-50.807 40.858-92.26 91.957-92.797v-.294zM71.075 149.893c10.763-18.148 27.595-32.249 47.752-40.003a134.308 134.308 0 0 0-3.455 29.342c-.174 58.952 39.193 111.274 97.433 129.495-10.376 8.36-22.506 14.466-35.56 17.898-24.037 6.26-49.683 2.91-71.118-9.291-45.903-26.087-61.706-82.724-35.56-127.441h.508zm-.458 211.901c-10.82-18.85-14.87-40.716-11.503-62.094a144.971 144.971 0 0 0 23.922 17.57c21.096 12.2 45.136 18.646 69.627 18.668a142.451 142.451 0 0 0 35.831-4.692c21.69-5.7 41.64-16.493 58.125-31.446 6.072 38.511-12.239 76.793-46.316 96.835-21.417 12.59-47.102 16.188-71.256 9.983-25.019-6.331-46.312-22.417-58.939-44.524l.51-.3zm185.12 102.546c-21.194-.131-41.677-7.601-57.917-21.121a133.872 133.872 0 0 0 27.284-11.832c50.865-30.16 76.638-89.204 64.024-146.672 41.267 16.713 65.055 59.88 56.975 103.392-8.08 43.51-45.809 75.421-90.366 76.428v-.195zm174.56-104.781c-10.365 18.23-26.73 32.368-46.35 40.041a132.315 132.315 0 0 0 3.353-29.37c.138-58.999-38.063-111.355-94.575-129.62a91.453 91.453 0 0 1 34.516-17.915c23.401-6.086 48.285-2.557 69.033 9.79 44.263 26.268 59.358 82.778 34.024 127.368v-.294z"></path>
+   </svg>';
+?>
 <script type="text/javascript" src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/js/jquery.multiselect.min.js"></script>
@@ -24,39 +27,40 @@
 <div class="">
    <img class="sendin-logo" src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/<?php echo $this->__('sendinblue.png'); ?>">
    <div class="slogan">
-      <?php echo $this->__('SendinBlue : THE all-in-one plugin for your marketing and transactional emails.'); ?>
+      <?php echo $this->__('Sendinblue : THE all-in-one plugin for your marketing and transactional emails.'); ?>
    </div>
    <div class="clear"></div>
 </div>
 <input type="hidden" name="langvalue" value="<?php echo Mage::app()->getLocale()->getLocaleCode(); ?>" id="langvalue">
 <div class="sendin_row">
    <fieldset class="fields">
-      <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif">
-         <?php echo $this->__('SendinBlue'); ?>
+      <legend class="lgend">
+         <?php echo $newIconSvg; ?>
+         <?php echo $this->__('Sendinblue'); ?>
       </legend>
       <div class="contact-details">
-         <h2 style="color:#268CCD;"> <?php echo $this->__('Contact SendinBlue team'); ?></h2>
+         <h2 style="color:#044A75;"> <?php echo $this->__('Contact Sendinblue team'); ?></h2>
          <div style="clear: both;"></div>
          <p> <?php echo $this->__('Contact us:'); ?>
-            <br><br>Email:<a href="mailto:<?php echo $this->__('contact@sendinblue.com'); ?>" style="color:#268CCD; text-decoration: none;">
+            <br><br>Email:<a href="mailto:<?php echo $this->__('contact@sendinblue.com'); ?>" style="color:#044A75; text-decoration: none;">
             <?php echo $this->__('contact@sendinblue.com'); ?></a>
             <br><?php echo $this->__('Phone : 0899 25 30 61'); ?>
          </p>
          <p style="padding-top:20px;"><b><?php echo $this->__('For further informations, please visit our website:'); ?></b>
-            <br><a href="<?php echo $this->__('https://www.sendinblue.com?utm_source=magento_plugin&utm_medium=plugin&utm_campaign=module_link'); ?>" target="_blank" style="color:#268CCD; text-decoration: none;">
+            <br><a href="<?php echo $this->__('https://www.sendinblue.com?utm_source=magento_plugin&utm_medium=plugin&utm_campaign=module_link'); ?>" target="_blank" style="color:#044A75; text-decoration: none;">
             <?php echo $this->__('https://www.sendinblue.com'); ?></a>
          </p>
       </div>
       <div>
-         <p><?php echo $this->__('With the SendinBlue plugin, you can find everything you need to easily and efficiently send your email & SMS campaigns to your prospects and customers.'); ?></p>
+         <p><?php echo $this->__('With the Sendinblue plugin, you can find everything you need to easily and efficiently send your email & SMS campaigns to your prospects and customers.'); ?></p>
          <ul class="listt">
-            <li>&nbsp;<?php echo $this->__('Synchronize your subscribers with SendinBlue (subscribed and unsubscribed contacts)'); ?></li>
+            <li>&nbsp;<?php echo $this->__('Synchronize your subscribers with Sendinblue (subscribed and unsubscribed contacts)'); ?></li>
             <li>&nbsp;<?php echo $this->__('Easily create good looking emailings'); ?></li>
             <li>&nbsp;<?php echo $this->__('Schedule your campaigns'); ?></li>
             <li>&nbsp;<?php echo $this->__('Track your results and optimize'); ?></li>
             <li>&nbsp;<?php echo $this->__('Monitor your transactional emails (purchase confirmation, password reset …) with a better deliverability and real-time analytics'); ?></li>
          </ul>
-         <b><?php echo $this->__('Why should you use SendinBlue ?'); ?></b>
+         <b><?php echo $this->__('Why should you use Sendinblue ?'); ?></b>
          <ul class="listt">
             <li>&nbsp;<?php echo $this->__('Optimized deliverability'); ?></li>
             <li>&nbsp;<?php echo $this->__('Unbeatable pricing &ndash; best value in the industry'); ?></li>
@@ -85,11 +89,12 @@
    ?>
 <div class="sendin_row">
    <fieldset class="fields">
-      <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif">
+      <legend class="lgend">
+         <?php echo $newIconSvg; ?>
          <?php echo $this->__('Prerequisites'); ?>
       </legend>
-      <span><?php echo $this->__('- You should have a SendinBlue account. You can create a free account here:'); ?> 
-      <a href="<?php echo $this->__('https://app.sendinblue.com/account/register/?utm_source=magento_plugin&utm_medium=plugin&utm_campaign=module_link'); ?>" target="_blank" style="text-decoration: none; color: #268CCD;">
+      <span><?php echo $this->__('- You should have a Sendinblue account. You can create a free account here:'); ?> 
+      <a href="<?php echo $this->__('https://app.sendinblue.com/account/register/?utm_source=magento_plugin&utm_medium=plugin&utm_campaign=module_link'); ?>" target="_blank" style="text-decoration: none; color: #044A75;">
       &nbsp;<?php echo $this->__('https://www.sendinblue.com'); ?></a><br></span>
    </fieldset>
 </div>
@@ -99,10 +104,13 @@
       <input name="skin_url" id ='skin_url' type="hidden" value="<?php echo $skinUrl;?>" />       
       <div class="section-config active">
          <fieldset class="fields">
-            <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif"> <?php echo $this->__('Settings'); ?></legend>
+            <legend class="lgend">
+                <?php echo $newIconSvg; ?>
+                <?php echo $this->__('Settings'); ?>
+            </legend>
             <table cellspacing="0" class="form-list3">
                <tr>
-                  <td class="fix_width2"><label><?php echo $this->__('Activate the SendinBlue module:'); ?></label></td>
+                  <td class="fix_width2"><label><?php echo $this->__('Activate the Sendinblue module:'); ?></label></td>
                   <td class="input-ele">
                      <input type="radio" <?php if($sendinStatus == 1) { echo 'checked'; } ?>    name="sendin_api_status"  class="sendin_api_status radio_nospaceing" value="1" /> <?php echo $this->__('Yes'); ?>
                      <input  type="radio"  name="sendin_api_status" <?php if($sendinStatus == 0) { echo 'checked'; } ?>  class="sendin_api_status radio_spaceing2" value="0" /> <?php echo $this->__('No'); ?>
@@ -113,7 +121,7 @@
                   <td><label><?php echo $this->__('API Key:'); ?></label></td>
                   <td class="input-ele">  
                      <input  type="text" name="sendin_apikey" id="sendin_apikey_val" class="input-text" value="<?php echo $apiKey; ?>" />
-                     <span class="toolTip" title="<?php echo stripslashes($this->__('Please enter your API key from your SendinBlue account and if you don\'t have it yet, please go to www.sendinblue.com and subscribe. You can then get the API key from https://my.sendinblue.com/integration')); ?>">&nbsp;</span>
+                     <span class="toolTip" title="<?php echo stripslashes($this->__('Please enter your API key from your Sendinblue account and if you don\'t have it yet, please go to www.sendinblue.com and subscribe. You can then get the API key from https://my.sendinblue.com/integration')); ?>">&nbsp;</span>
                   </td>
                </tr>
                <tr>
@@ -135,13 +143,16 @@
    <div class="section-config active">
       <input name="form_key" type="hidden" value="<?php echo $formKey; ?>" />       
       <fieldset id="my-fieldset" class="fields">
-         <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif"> <?php echo $this->__('Activate SendinBlue to manage subscribers'); ?></legend>
+         <legend class="lgend">
+            <?php echo $newIconSvg; ?>
+            <?php echo $this->__('Activate Sendinblue to manage subscribers'); ?>
+         </legend>
          <table cellspacing="0" class="form-list">
             <tr>
-               <td class="fix_width"><label><?php echo $this->__('Activate SendinBlue to manage subscribers'); ?></label></td>
+               <td class="fix_width"><label><?php echo $this->__('Activate Sendinblue to manage subscribers'); ?></label></td>
                <td class="input-ele">
                   <input type="radio" <?php if($getSyncronize == 1) { echo "checked"; } ?>  name="syncronize" value="1" class="radio_nospaceing hdtab"/> <?php echo $this->__('Yes'); ?>
-                  <input  type="radio" <?php if($getSyncronize == 0) { echo "checked"; } ?> name="syncronize" value="0" class="radio_spaceing2 hdtab" />  <?php echo $this->__('No'); ?> <span title="<?php echo $this->__('If you activate this feature, your new contacts will be automatically added to SendinBlue or unsubscribed from SendinBlue. To synchronize the other way (SendinBlue to Magento), you should run the url (mentioned below) each day.'); ?>" class="toolTip">&nbsp;</span>
+                  <input  type="radio" <?php if($getSyncronize == 0) { echo "checked"; } ?> name="syncronize" value="0" class="radio_spaceing2 hdtab" />  <?php echo $this->__('No'); ?> <span title="<?php echo $this->__('If you activate this feature, your new contacts will be automatically added to Sendinblue or unsubscribed from Sendinblue. To synchronize the other way (Sendinblue to Magento), you should run the url (mentioned below) each day.'); ?>" class="toolTip">&nbsp;</span>
                </td>
             </tr>
             <tr>
@@ -167,7 +178,7 @@
                                  <option value="<?php echo $value['id']; ?>" <?php if(in_array($value['id'],$list_array)) echo 'selected = "selected"' ?> ><?php echo $value['name']; ?></option>
                                  <?php } ?>
                               </select>
-                              <span title="<?php echo $this->__('Select the contact list where you want to save the contacts of your site Magento. By default, we have created a list Magento in your SendinBlue account and we have selected it'); ?>" class="toolTip">&nbsp;</span>
+                              <span title="<?php echo $this->__('Select the contact list where you want to save the contacts of your site Magento. By default, we have created a list Magento in your Sendinblue account and we have selected it'); ?>" class="toolTip">&nbsp;</span>
                            </td>
                         </tr>
                         <!-- double optin functionality -->
@@ -211,7 +222,7 @@
                                                    } 
                                                    ?>
                                              </select>
-                                             <span title="<?php echo $this->__('Select a SendinBlue template that will be sent personalized for each contact that subscribes to your newsletter'); ?>" class="toolTip"></span>
+                                             <span title="<?php echo $this->__('Select a Sendinblue template that will be sent personalized for each contact that subscribes to your newsletter'); ?>" class="toolTip"></span>
                                           </div>
                                        </div>
                                        <div class="clearfix"></div>
@@ -287,7 +298,7 @@
                                                       } 
                                                       ?>  
                                                 </select>
-                                                <span title="<?php echo $this->__('Select a SendinBlue template that will be sent personalized for each contact that subscribes to your newsletter'); ?>"class="toolTip"></span>
+                                                <span title="<?php echo $this->__('Select a Sendinblue template that will be sent personalized for each contact that subscribes to your newsletter'); ?>"class="toolTip"></span>
                                              </div>
                                              <div class="clearfix"></div>
                                              <div class="pull-left" id="final-mail-templates"></div>
@@ -308,7 +319,6 @@
                         </td>
                         </tr>
 </form>
-<?php if(isset($viewData['importOldSubsStatus']) && $viewData['importOldSubsStatus'] == 1){ ?>
 <form id="reimport_form" name="reimport_form" method="post" action="<?php echo $this->getUrl('*/*/reimportpost'); ?>">
 <input name="form_key" type="hidden" value="<?php echo $formKey; ?>" /> 
 <tr>
@@ -318,9 +328,8 @@
 <input type="submit" class="btn" name="importoldSubmit" value ="<?php echo $this->__('Import Old Subscribers'); ?>" /></div>
 </td>
 </tr></form>
-<?php } ?>
 <tr><td colspan="2">
-<?php echo $this->__('To synchronize the emails of your customers from SendinBlue platform to your e-commerce website, you should run '); ?><a href="<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/sync/index/",array()); ?>" style="color: #000000; outline: 0 none; text-decoration: none;"><?php echo $this->__('this link'); ?> </a><?php echo $this->__('each day'); ?><span class="toolTip" title="<?php echo $this->__('Note that if you change the name of your Shop (currently ');?><?php echo ucfirst(Mage::app()->getFrontController()->getRequest()->getModuleName());?><?php echo $this->__(') the token value changes.'); ?>">&nbsp;</span>
+<?php echo $this->__('To synchronize the emails of your customers from Sendinblue platform to your e-commerce website, you should run '); ?><a href="<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/sync/index/",array()); ?>" style="color: #000000; outline: 0 none; text-decoration: none;"><?php echo $this->__('this link'); ?> </a><?php echo $this->__('each day'); ?><span class="toolTip" title="<?php echo $this->__('Note that if you change the name of your Shop (currently ');?><?php echo ucfirst(Mage::app()->getFrontController()->getRequest()->getModuleName());?><?php echo $this->__(') the token value changes.'); ?>">&nbsp;</span>
 </td></tr>
 </table>
 </div>
@@ -344,10 +353,13 @@
       <input name="smtpUrl" type="hidden" id="smtpUrl" value="<?php echo $this->getUrl('adminhtml/ajax/smtppost'); ?>" />    
       <div class="section-config active">
          <fieldset class="fields">
-            <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif"> <?php echo $this->__('Activate SendinBlue SMTP for your transactional emails'); ?></legend>
+            <legend class="lgend">
+               <?php echo $newIconSvg; ?>
+               <?php echo $this->__('Activate Sendinblue SMTP for your transactional emails'); ?>
+            </legend>
             <table cellspacing="0" class="form-list">
                <tr>
-                  <td class="fix_width"><label><?php echo $this->__('Activate SendinBlue SMTP for your transactional emails'); ?></label></td>
+                  <td class="fix_width"><label><?php echo $this->__('Activate Sendinblue SMTP for your transactional emails'); ?></label></td>
                   <td class="input-ele">
                      <input type="radio" class = 'smtpStatus radio_nospaceing' <?php if($moduleStatus == 1) { echo 'checked'; } ?> name="smtp" value="1" /> <?php echo $this->__('Yes'); ?>
                      <input  <?php if($moduleStatus == 0) { echo 'checked'; } ?> type="radio" class = 'smtpStatus radio_spaceing2' name="smtp" value="0" /> <?php echo $this->__('No'); ?><span title="<?php echo $this->__('Transactional email is an expected email because it is triggered automatically after a transaction or a specific event. Common examples of transactional email are : account opening and welcome message, order shipment confirmation, shipment tracking and purchase order status, registration via a contact form, account termination, payment confirmation, invoice etc.'); ?>" class="toolTip">&nbsp;</span>
@@ -369,7 +381,10 @@
    <div class="section-config active">
       <input name="trackingUrl" type="hidden" id="trackingUrl" value="<?php echo $this->getUrl('adminhtml/ajax/codepost'); ?>" />          
       <fieldset id="my-fieldset" class="fields">
-         <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif"> <?php echo $this->__('Code tracking'); ?> </legend>
+         <legend class="lgend">
+            <?php echo $newIconSvg; ?>
+            <?php echo $this->__('Code tracking'); ?> 
+         </legend>
          <table cellspacing="0" class="form-list">
             <tr>
                <td class="fix_width"><label><?php echo $this->__('Do you want to install a tracking code when validating an order'); ?></label>
@@ -377,7 +392,7 @@
                <td class="input-ele">
                   <input type="radio" <?php if($trackStatus == 1) { echo 'checked'; } ?>  name="Tracking" class='Tracking radio_nospaceing' value="1" /> <?php echo $this->__('Yes'); ?>
                   <input  type="radio" <?php if($trackStatus == 0) { echo 'checked'; } ?> name="Tracking"  class='Tracking radio_spaceing2' value="0" /> <?php echo $this->__('No'); ?>
-                  <span title="<?php echo $this->__('This feature will allow you to transfer all your customers orders from Magento into SendinBlue to implement your email marketing strategy.'); ?>" class="toolTip">&nbsp;</span>
+                  <span title="<?php echo $this->__('This feature will allow you to transfer all your customers orders from Magento into Sendinblue to implement your email marketing strategy.'); ?>" class="toolTip">&nbsp;</span>
                </td>
             </tr>
             <?php  
@@ -402,21 +417,24 @@
       <input type="hidden" name="automsg" id="automsg" value="<?php echo $this->__('Your Marketing Automation script will be uninstalled, you would not have access to any Marketing Automation data and workflows');?>" />          
       <input name="automationUrl" type="hidden" id="automationUrl" value="<?php echo $this->getUrl('adminhtml/ajax/automationpost'); ?>" />          
       <fieldset id="my-fieldset" class="fields">
-         <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif"> <?php echo $this->__('Automation'); ?> </legend>
+         <legend class="lgend">
+            <?php echo $newIconSvg; ?>
+            <?php echo $this->__('Automation'); ?> 
+         </legend>
          <table cellspacing="0" class="form-list">
             <tr>
-               <td class="fix_width"><label><?php echo $this->__('Activate Marketing Automation through SendinBlue'); ?></label></td>
+               <td class="fix_width"><label><?php echo $this->__('Activate Marketing Automation through Sendinblue'); ?></label></td>
                <td class="input-ele">
                   <input type="radio" <?php if($automationStatus == 1) { echo 'checked'; } ?>  name="Automation" class='radio_nospaceing' value="1" /> <?php echo $this->__('Yes'); ?>
                   <input  type="radio" <?php if($automationStatus == 0) { echo 'checked'; } ?> name="Automation" class='radio_spaceing2' value="0" /> <?php echo $this->__('No'); ?>
-                  <span title="<?php echo $this->__('Choose Yes if you want to use SendinBlue Automation to track your website activity'); ?>" class="toolTip">&nbsp;</span>
+                  <span title="<?php echo $this->__('Choose Yes if you want to use Sendinblue Automation to track your website activity'); ?>" class="toolTip">&nbsp;</span>
                </td>   
             </tr>
             <tr>
                <td class="fix_width">
                   <label>
-                  <a style="color:#268CCD;" href="https://resources.sendinblue.com/en/introduction-marketing-automation/?utm_source=magento_plugin&utm_medium=plugin&utm_campaign=module_link"><?php echo $this->__('Explore our resource')?></a>
-                  <?php echo $this->__('to learn more about SendinBlue Automation'); ?>                                
+                  <a style="color:#044A75;" href="https://resources.sendinblue.com/en/introduction-marketing-automation/?utm_source=magento_plugin&utm_medium=plugin&utm_campaign=module_link"><?php echo $this->__('Explore our resource')?></a>
+                  <?php echo $this->__('to learn more about Sendinblue Automation'); ?>                                
                   </label>
                </td>
                <td class='a_right'>
@@ -431,7 +449,8 @@
 </div>
 <div class="sendin_row hidetableblock" <?php echo $style; ?> >
    <fieldset class="fields">
-      <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif">
+      <legend class="lgend">
+         <?php echo $newIconSvg; ?>
          <?php echo $this->__('Manage SMS'); ?>
       </legend>
       <table width="100%" cellspacing="0" cellpadding="0"  class="table hidetableblock form-list">
@@ -791,7 +810,10 @@
 <?php  if($getSyncronize == 1) { ?>
 <div class="sendin_row alldiv" <?php echo $style; ?> >
    <fieldset id="my-fieldset" class="fields">
-      <legend class="lgend"><img src="<?php echo $skinUrl;?>adminhtml/default/default/sendinblue/images/logo.gif"> <?php echo $this->__('Contacts list'); ?> </legend>
+      <legend class="lgend">
+         <?php echo $newIconSvg; ?>
+         <?php echo $this->__('Contacts list'); ?> 
+      </legend>
       <input name="ajaxcontentUrl" type="hidden" id="ajaxcontentUrl" value="<?php echo $this->getUrl('adminhtml/ajax/ajaxcontent'); ?>" />
       <input name="ajaxUrl" type="hidden" id="ajaxUrl" value="<?php echo $this->getUrl('adminhtml/ajax/ajaxupdate'); ?>" />
       <input name="ajaxOrderSmsUrl" type="hidden" id="ajaxOrderSmsUrl" value="<?php echo $this->getUrl('adminhtml/ajax/ajaxordersms'); ?>" />
@@ -817,8 +839,8 @@
                         <th class="no-link"><span class="nobr"><?php echo $this->__('clients'); ?></span></th>
                         <th class="no-link"><span class="nobr"><?php echo $this->__('SMS'); ?></span></th>
                         <th class="no-link"><span class="nobr"><?php echo $this->__('Newsletter Magento Status'); ?></span></th>
-                        <th class="no-link"><span class="nobr"><?php echo $this->__('Newsletter SendinBlue Status'); ?><span title="<?php echo $this->__('Click on the icon to subscribe / unsubscribe the contact from SendinBlue and Magento.'); ?>" class="toolTip">&nbsp;</span></span></th>
-                        <th class="no-link last"><span class="nobr"><?php echo $this->__('SMS SendinBlue Status'); ?><span title="<?php echo $this->__('Click on the icon to subscribe / unsubscribe the sms from SendinBlue and Magento.'); ?>" class="toolTip">&nbsp;</span></span></th>
+                        <th class="no-link"><span class="nobr"><?php echo $this->__('Newsletter Sendinblue Status'); ?><span title="<?php echo $this->__('Click on the icon to subscribe / unsubscribe the contact from Sendinblue and Magento.'); ?>" class="toolTip">&nbsp;</span></span></th>
+                        <th class="no-link last"><span class="nobr"><?php echo $this->__('SMS Sendinblue Status'); ?><span title="<?php echo $this->__('Click on the icon to subscribe / unsubscribe the sms from Sendinblue and Magento.'); ?>" class="toolTip">&nbsp;</span></span></th>
                      </tr>
                   </thead>
                   <tbody class='midleft'>

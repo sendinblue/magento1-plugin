@@ -130,7 +130,8 @@ class Sendinblue_Sendinblue_Adminhtml_AjaxController extends Mage_Core_Controlle
                Mage::throwException($this->__('Invalid form data.'));
             }
             if ($postData['proc_success'] != '') {
-                $handle = fopen(Mage::getBaseDir('media').'/sendinblue_csv/ImportSubUsersToSendinblue.csv', 'w+');
+                $fileName = Mage::getStoreConfig('sendinblue/CsvFileName');
+                $handle = fopen(Mage::getBaseDir('media').'/sendinblue_csv/'.$fileName.'.csv', 'w+');
                 $keyValue = array();
                 $keyValue[] = '';           
                 fputcsv($handle, $keyValue);
@@ -207,9 +208,10 @@ class Sendinblue_Sendinblue_Adminhtml_AjaxController extends Mage_Core_Controlle
             }
             
             if ($postData['proc_success'] != '') {
-                $handle = fopen(Mage::getBaseDir('media').'/sendinblue_csv/ImportOldOrdersToSendinblue.csv', 'w+');
+                $fileName = Mage::getStoreConfig('sendinblue/CsvFileName');
+                $handle = fopen(Mage::getBaseDir('media').'/sendinblue_csv/'.$fileName.'.csv', 'w+');
                 $keyValue = array();
-                $keyValue[] = '';           
+                $keyValue[] = '';
                 fputcsv($handle, $keyValue);
                 fclose($handle);
             }
@@ -222,6 +224,7 @@ class Sendinblue_Sendinblue_Adminhtml_AjaxController extends Mage_Core_Controlle
     public function orderhistoryAction()
     {
         $sendinModule = Mage::getModel('sendinblue/sendinblue');
+        $configObj = Mage::getModel('core/config');
         $apiDetails['api_key'] = $sendinModule->getApiKey();
         $psmailinObj = Mage::getModel('sendinblue/psmailin',$apiDetails);
 
@@ -237,7 +240,9 @@ class Sendinblue_Sendinblue_Adminhtml_AjaxController extends Mage_Core_Controlle
                 if (!is_dir(Mage::getBaseDir('media').'/sendinblue_csv')) {
                     mkdir(Mage::getBaseDir('media').'/sendinblue_csv', 0777, true);
                 }
-                $handle = fopen(Mage::getBaseDir('media').'/sendinblue_csv/ImportOldOrdersToSendinblue.csv', 'w+');
+                $fileName = rand();
+                $configObj->saveConfig('sendinblue/CsvFileName', $fileName);
+                $handle = fopen(Mage::getBaseDir('media').'/sendinblue_csv/'.$fileName.'.csv', 'w+');
                 fwrite($handle, 'EMAIL,ORDER_ID,ORDER_PRICE,ORDER_DATE'.PHP_EOL);
                 
                 $prefix = Mage::getConfig()->getTablePrefix();
@@ -271,8 +276,9 @@ class Sendinblue_Sendinblue_Adminhtml_AjaxController extends Mage_Core_Controlle
                 $getUserLists = $sendinModule->getUserlists();
                 $list = str_replace('|', ',', $getUserLists);
                 $list = (preg_match('/^[0-9,]+$/', $list)) ? $list : '';
+                $fileName = Mage::getStoreConfig('sendinblue/CsvFileName');
                 $importData = array();
-                $importData['url'] = Mage::getBaseUrl('media').'sendinblue_csv/ImportOldOrdersToSendinblue.csv';
+                $importData['url'] = Mage::getBaseUrl('media').'sendinblue_csv/'.$fileName.'.csv';
                 $importData['listids'] = array($list);
                 $importData['notify_url'] = Mage::getBaseUrl().'sendinblue/ajax/emptyImportOldOrder';
                 /**
@@ -280,8 +286,7 @@ class Sendinblue_Sendinblue_Adminhtml_AjaxController extends Mage_Core_Controlle
                 */
                 
                 $psmailinObj->importUsers($importData);
-                $sendinSwitch = Mage::getModel('core/config');
-                $sendinSwitch->saveConfig('sendinblue/improt/history', 0);
+                $configObj->saveConfig('sendinblue/improt/history', 0);
                 if($postData['langvalue'] == 'fr_FR') {
                     $msg = 'Historique des commandes a été importé avec succès.';
                 }
@@ -325,7 +330,7 @@ class Sendinblue_Sendinblue_Adminhtml_AjaxController extends Mage_Core_Controlle
                         Mage::app()->getResponse()->setBody($msg);
                     } else {
                         $sendinSwitch->saveConfig('sendinblue/smtp/status', 0);
-                        $msg = $this->__('Your SMTP account is not activated and therefore you can\'t use SendinBlue SMTP. For more informations, please contact our support to: contact@sendinblue.com');
+                        $msg = $this->__('Your SMTP account is not activated and therefore you can\'t use Sendinblue SMTP. For more informations, please contact our support to: contact@sendinblue.com');
                         Mage::app()->getResponse()->setHeader('Content-type', 'application/text');
                         Mage::app()->getResponse()->setBody($msg);
                     }
@@ -848,7 +853,7 @@ class Sendinblue_Sendinblue_Adminhtml_AjaxController extends Mage_Core_Controlle
                         }
                         else {
                             $sendinSwitch->saveConfig('sendinblue/tracking/automationscript', 0);
-                            $msg = $this->__("To activate Marketing Automation , please go to your SendinBlue's account or contact us at contact@sendinblue.com");
+                            $msg = $this->__("To activate Marketing Automation , please go to your Sendinblue's account or contact us at contact@sendinblue.com");
                             Mage::app()->getResponse()->setHeader('Content-type', 'application/text');
                             Mage::app()->getResponse()->setBody($msg);
                         }
