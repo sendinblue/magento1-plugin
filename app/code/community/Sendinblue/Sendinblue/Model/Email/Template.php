@@ -7,8 +7,22 @@
 * versions in the future. If you wish to customize Sendinblue magento plugin for your
 * needs then we can't provide a technical support.
 **/
+// Aschroder_SMTP backward compatibility
+if (Mage::helper('core')->isModuleEnabled('Aschroder_SMTPPro')
+    && class_exists('Aschroder_SMTPPro_Model_Email_Template')
+) {
+    class_alias('Aschroder_SMTPPro_Model_Email_Template', 'Sendinblue_Sendinblue_Model_Email_TemplateBase');
+} elseif (Mage::helper('core')->isModuleEnabled('Aschroder_Email')
+    && class_exists('Aschroder_Email_Model_Email_Template')
+) {
+    class_alias('Aschroder_Email_Model_Email_Template', 'Sendinblue_Sendinblue_Model_Email_TemplateBase');
+} else {
+    class Sendinblue_Sendinblue_Model_Email_TemplateBase extends Mage_Core_Model_Email_Template
+    {
+    }
+}
 
-class Sendinblue_Sendinblue_Model_Email_Template extends Mage_Core_Model_Email_Template {
+class Sendinblue_Sendinblue_Model_Email_Template extends Sendinblue_Sendinblue_Model_Email_TemplateBase {
     
     public function send($email, $name=null, array $variables = array()) 
     {                
