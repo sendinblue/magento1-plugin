@@ -630,9 +630,37 @@ jQuery.ajax({
     beforeSend : function(){
         jQuery('#ajax-busy').show();
     },
-    success : function(msg){
-        jQuery('#ajax-busy').hide();
+    success : function(msg) {
+	setTimeout(function() {
+		jQuery('#ajax-busy').hide();
+		}, 1000);  
+	}
+});
+});
+jQuery(".abandonedCartSubmit").click(function() {
+var abandonedCartEnableStatus = jQuery("input[name='abandonedCart']:checked").val();
+var abandonedCartUrl = jQuery("#abandonedCartUrl").val();
+var abandonedCartMsg = jQuery('#abandonedCartMsg').val();
+
+if (abandonedCartEnableStatus == 0) {
+    var resp = confirm(abandonedCartMsg);
+    if (resp === false) {
+        return;
     }
+}
+jQuery.ajax({
+    type : "POST",
+    async : false,
+    url : abandonedCartUrl,
+    data : "script=" + abandonedCartEnableStatus,
+    beforeSend : function(){
+        jQuery('#ajax-busy').show();
+    },
+    success : function(msg){
+	setTimeout(function() {
+		jQuery('#ajax-busy').hide();
+		}, 1000);   
+	}
 });
 });
 var skin_url = jQuery('#skin_url').val()

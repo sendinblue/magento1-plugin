@@ -875,4 +875,50 @@ class Sendinblue_Sendinblue_Adminhtml_AjaxController extends Mage_Core_Controlle
             $this->__($exception->getMessage());
         }
     }
+    public function abandonedCartPostAction()
+    {
+        $sendinModule = Mage::getModel('sendinblue/sendinblue');
+        $postData = $this->getRequest()->getPost();
+        try {
+            if (empty($postData)) {
+                Mage::throwException($this->__('Invalid form data.'));
+            }
+            else {
+                $sendinSwitch = Mage::getModel('core/config');
+                $getKey = $sendinModule->getApiKey();
+                $apiKeyStatus = $sendinModule->checkApikey($getKey);
+                if (empty($apiKeyStatus['error'])) {
+                    $sendinSwitch->saveConfig('sendinblue/tracking/abandonedcartstatus', $postData['script']);
+                    if($postData['script']) {
+                        $smtpResponse = $sendinModule->trackingSmtp(); // get tracking code
+                        if (isset($smtpResponse['data']['marketing_automation']['key']) && $smtpResponse['data']['marketing_automation']['enabled'] == 1) {
+                            $sendinSwitch->saveConfig('sendinblue/automation/key', $smtpResponse['data']['marketing_automation']['key'], 'default', 0);
+                            $msg = $this->__('Your setting has been successfully saved');
+                            Mage::app()->getResponse()->setHeader('Content-type', 'application/text');
+                            Mage::app()->getResponse()->setBody($msg);
+                        }
+                        else {
+                            $sendinSwitch->saveConfig('sendinblue/tracking/abandonedcartstatus', 0);
+                            $msg = $this->__("To activate Marketing Automation , please go to your Sendinblue's account or contact us at contact@sendinblue.com");
+                            Mage::app()->getResponse()->setHeader('Content-type', 'application/text');
+                            Mage::app()->getResponse()->setBody($msg);
+                        }
+                    }
+                    else {
+                        $msg = $this->__('Your setting has been successfully saved');
+                        Mage::app()->getResponse()->setHeader('Content-type', 'application/text');
+                        Mage::app()->getResponse()->setBody($msg); 
+                    }
+                }
+                else {
+                    $msg = $this->__('You have entered wrong api key');
+                    Mage::app()->getResponse()->setHeader('Content-type', 'application/text');
+                    Mage::app()->getResponse()->setBody($msg);
+                }
+            }
+        }
+        catch (Exception $exception) {
+            $this->__($exception->getMessage());
+        }
+    }
 }

@@ -80,6 +80,7 @@
    $getSyncronize = $viewData['getSyncronize'];
    $trackStatus = $viewData['trackStatus'];
    $automationStatus = $viewData['automationStatus'];
+   $abandonedCartStatus = $viewData['abandonedCartStatus'];
    $trackingHistory = $viewData['trackingHistory'];
    $notifySmsStatus = $viewData['notifySmsStatus'];
    $orderSmsStatus = $viewData['orderSmsStatus'];
@@ -440,6 +441,37 @@
                <td class='a_right'>
                   <div class='btnmrgn-right'>
                      <input type="submit" style="align:right;" class="AutomationSubmit btn"  name="AutomationSubmit"  value ="<?php echo $this->__('Validate'); ?>" />
+                  </div>
+               </td>
+            </tr>
+         </table>
+      </fieldset>
+   </div>
+</div>
+<div class="sendin_row alldiv" <?php echo $style; ?> >
+   <div class="section-config active"> 
+      <input type="hidden" name="abandonedCartMsg" id="abandonedCartMsg" value="<?php echo $this->__('Your Abandoned Cart tracking feature will be uninstalled, you would not have access to any Cart tracking data and workflows');?>" />          
+      <input name="abandonedCartUrl" type="hidden" id="abandonedCartUrl" value="<?php echo $this->getUrl('adminhtml/ajax/abandonedCartPost'); ?>" />          
+      <fieldset id="my-fieldset" class="fields">
+         <legend class="lgend">
+            <?php echo $newIconSvg; ?>
+            <?php echo $this->__('Abandoned Cart tracking'); ?> 
+         </legend>
+         <table cellspacing="0" class="form-list">
+            <tr>
+               <td class="fix_width"><label><?php echo $this->__('Do you want to recover abandoned cart?'); ?></label></td>
+               <td class="input-ele">
+                  <input type="radio" <?php if($abandonedCartStatus == 1) { echo 'checked'; } ?>  name="abandonedCart" class='radio_nospaceing' value="1" /> <?php echo $this->__('Yes'); ?>
+                  <input  type="radio" <?php if($abandonedCartStatus == 0) { echo 'checked'; } ?> name="abandonedCart" class='radio_spaceing2' value="0" /> <?php echo $this->__('No'); ?>
+                  <span title="<?php echo $this->__('Choose Yes if you want to use Sendinblue Abandoned Cart to track your website cart activity'); ?>" class="toolTip">&nbsp;</span>
+               </td>   
+            </tr>
+            <tr>
+               <td class="fix_width">
+               </td>
+               <td class='a_right'>
+                  <div class='btnmrgn-right'>
+                     <input type="submit" style="align:right;" class="abandonedCartSubmit btn"  name="abandonedCartSubmit"  value ="<?php echo $this->__('Validate'); ?>" />
                   </div>
                </td>
             </tr>

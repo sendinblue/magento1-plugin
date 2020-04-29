@@ -190,8 +190,25 @@
                     </sendinblue_update_data>
                 </observers>
             </customer_save_after>  
+            <sales_quote_save_after>
+                <observers>
+                    <sales_quote_save_after>
+                        <type>singleton</type>
+                        <class>Sendinblue_Sendinblue_Model_Observer</class>
+                        <method>cartUpdate</method>
+                    </sales_quote_save_after>
+                </observers>
+            </sales_quote_save_after>
+            <checkout_type_onepage_save_order_after>
+                <observers>
+                    <order_complete>
+                        <type>singleton</type>
+                        <class>Sendinblue_Sendinblue_Model_Observer</class>
+                        <method>orderComplete</method>
+                    </order_complete>
+                </observers>
+            </checkout_type_onepage_save_order_after>
         </events>
-                
         <template>
             <email>
                 <custom_template>

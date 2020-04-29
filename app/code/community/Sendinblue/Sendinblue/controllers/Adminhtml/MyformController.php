@@ -25,6 +25,7 @@ class Sendinblue_Sendinblue_Adminhtml_MyformController extends Mage_Adminhtml_Co
         $trackStatus = '';
         $trackingHistory = '';
         $automationStatus = '';
+        $abandonedCartStatus = '';
         $notifySmsStatus = '';
         $orderSmsStatus = '';
         $campaignStatus = '';
@@ -59,6 +60,9 @@ class Sendinblue_Sendinblue_Adminhtml_MyformController extends Mage_Adminhtml_Co
                 }
                 elseif($sendinblueEnabled['path'] == 'sendinblue/tracking/automationscript') {
                     $automationStatus = $sendinblueEnabled['value'];
+                }
+                elseif($sendinblueEnabled['path'] == 'sendinblue/tracking/abandonedcartstatus') {
+                    $abandonedCartStatus = $sendinblueEnabled['value'];
                 }
                 elseif($sendinblueEnabled['path'] == 'sendinblue/sms/credit') {
                     $notifySmsStatus = $sendinblueEnabled['value'];
@@ -121,6 +125,7 @@ class Sendinblue_Sendinblue_Adminhtml_MyformController extends Mage_Adminhtml_Co
                         "trackStatus" => $trackStatus,
                         "trackingHistory" => $trackingHistory,
                         "automationStatus" => $automationStatus,
+                        "abandonedCartStatus" => $abandonedCartStatus,
                         "notifySmsStatus" => $notifySmsStatus,
                         "orderSmsStatus" => $orderSmsStatus,
                         "campaignStatus" => $campaignStatus,

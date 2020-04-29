@@ -250,4 +250,253 @@ class Sendinblue_Sendinblue_Model_Observer
             }
         }
     }
+    /**
+     * This hook called for event checkout_type_onepage_save_order_after
+     */
+    public function orderComplete($observer) {
+        if (Mage::helper('sendinblue')->ModuleisEnabled() == 0)
+        {
+            return false;
+        }
+
+        $order = $observer->getEvent()->getOrder();
+        $orderData = $order->getData();
+
+        $requestParameters = Mage::app()->getRequest()->getParams();
+        $automationKey = Mage::getStoreConfig('sendinblue/automation/key');
+        $abandonedCartStatus = Mage::getStoreConfig('sendinblue/tracking/abandonedcartstatus');
+        $email = Mage::helper('sendinblue')->getEmail();
+       
+        if (empty(email)) {
+            $email = $orderData['customer_email'];
+        }
+        if (empty($automationKey) || $abandonedCartStatus != 1 || empty($email)) { 
+            return false;
+        }
+        $data = array(
+            'email' => $email,
+            'event' => 'order_completed',
+            'properties' => array(
+                'FIRSTNAME' => !empty($orderData['customer_firstname']) ? $orderData['customer_firstname'] : '',
+                'LASTNAME' =>  !empty($orderData['customer_firstname']) ? $orderData['customer_firstname'] : ''
+            ),
+            'eventdata' => array(
+                'id' => "cart:".$orderData['quote_id'],
+                'data' => array()
+            )
+        );
+        $totalDiscount =  !empty($orderData['discount_amount']) ? $orderData['discount_amount'] : 0;
+        $totalShipping =  !empty($orderData['shipping_amount']) ? $orderData['shipping_amount'] : 0;
+        $totalShippingTaxInc = !empty($orderData['shipping_incl_tax']) ? $orderData['shipping_incl_tax'] : 0;
+        $totalTax =  !empty($orderData['tax_amount']) ? $orderData['tax_amount'] : 0;
+
+        $data['eventdata']['data']['id'] = $orderData['increment_id'];
+        $data['eventdata']['data']['currency'] = !empty($orderData['order_currency_code']) ? $orderData['order_currency_code'] : '';
+        $data['eventdata']['data']['discount'] = $totalDiscount;
+        $data['eventdata']['data']['discount_taxinc'] = $totalDiscount;
+        $data['eventdata']['data']['revenue'] =  !empty($orderData['grand_total']) ? $orderData['grand_total'] : 0;
+        $data['eventdata']['data']['shipping'] = $totalShipping;
+        $data['eventdata']['data']['shipping_taxinc'] = $totalShippingTaxInc;
+        $data['eventdata']['data']['subtotal']= !empty($orderData['subtotal']) ? $orderData['subtotal'] + $totalDiscount : 0;
+        $data['eventdata']['data']['subtotal_predisc'] = !empty($orderData['subtotal']) ? $orderData['subtotal'] : 0;
+        $data['eventdata']['data']['subtotal_taxinc'] =   !empty($orderData['subtotal']) ? $orderData['subtotal'] + $totalDiscount + $totalTax : 0;
+        $data['eventdata']['data']['subtotal_predisc_taxinc'] = $orderData['subtotal'] + $totalTax;
+        $data['eventdata']['data']['tax']= $totalTax;
+        $data['eventdata']['data']['total'] = !empty($orderData['grand_total']) ? $orderData['grand_total'] : 0;
+        $data['eventdata']['data']['total_before_tax'] = $orderData['grand_total'] - $totalTax;
+        $data['eventdata']['data']['url'] = Mage::getUrl('sales/order');
+
+        $allProducts = array();
+        foreach ($order->getAllVisibleItems() as $item) {
+            $productData = $item->getData();
+            $productId = !empty($productData['product_id']) ? $productData['product_id']: '';
+            $product = Mage::getModel('catalog/product')->load($productId);
+            if(empty($product)){
+                continue;
+            }
+            //getImage() will return relative path of image or "no_selection" id there is no image
+            $image = $product->getImage();
+            $imageFullUrl = !empty($image) && $image != 'no_selection' ?  Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'catalog/product' .$image : $product->getImageUrl();
+            $discAmountSum = !empty($productData['discount_amount']) ? $productData['discount_amount']:0;
+            $qty = !empty($productData['qty_ordered']) ? $productData['qty_ordered']:1;
+            $discAmountPerItem = $discAmountSum/$qty;
+            $pricePreDisc = !empty($productData['price']) ? $productData['price'] : 0;
+            $pricePreDiscTaxInc = !empty($productData['price_incl_tax']) ? $productData['price_incl_tax'] : 0;
+            $priceDiscInc = $pricePreDisc - $discAmountPerItem; // here minus discount because discount is already negative
+            $priceDiscIncTaxInc = $pricePreDiscTaxInc - $discAmountPerItem; // here minus discount because discount is already negative
+            $allProducts[] = array(
+                'id' => !empty($productData['product_id']) ? $productData['product_id'] : '',
+                'name' => !empty($productData['name']) ? $productData['name'] : '',
+                'category' => !empty($productData['product_type']) ? $productData['product_type'] : '',
+                'description_short' => $product->getData('short_description'),
+                'available_now' => !empty($product->getStockItem()->getQty()) ? 'In Stock': 0,
+                'price' => round($priceDiscInc, 3),
+                'quantity' => $qty,
+                'variant_id_name' => '',
+                'variant_id' => '',
+                'size' => !empty($product->getData('size')) ? $product->getData('size') : '',
+                'sku' => !empty($productData['sku']) ? $productData['sku'] : '',
+                'url' => $product->getProductUrl(),
+                'image' => $imageFullUrl,
+                'price_predisc' =>  round($pricePreDisc, 3),
+                'price_predisc_taxinc' => round($pricePreDiscTaxInc, 3),
+                'price_taxinc' => round($priceDiscIncTaxInc, 3),                                   
+                'tax_amount' => round($pricePreDiscTaxInc - $pricePreDisc, 3),
+                'tax_rate' => !empty($productData['tax_percent']) ? $productData['tax_percent'] : 0,
+                'tax_name' => !empty($productData['tax_name']) ? $productData['tax_name'] : '',
+                'disc_amount' => round($discAmountPerItem, 3),
+                'disc_amount_taxinc' => round($discAmountPerItem,3),
+                'disc_rate' => round($discAmountPerItem/$pricePreDisc, 3)*100,
+            );
+        }
+        $data['eventdata']['data']['items'] = $allProducts;
+
+        $billingAddress = $order->getBillingAddress()->getData();
+        $shippingAddress = $order->getShippingAddress()->getData();
+        $data['eventdata']['data']['shipping_address'] = array(
+            'firstname' => !empty($shippingAddress['firstname']) ? $shippingAddress['firstname'] : '',
+            'lastname' => !empty($shippingAddress['lastname']) ? $shippingAddress['lastname'] : '',
+            'company' => !empty($shippingAddress['company']) ? $shippingAddress['company'] : '',
+            'phone' => !empty($shippingAddress['telephone']) ? $shippingAddress['telephone'] : '',
+            'country' => !empty($shippingAddress['country_id']) ? $shippingAddress['country_id'] : '',
+            'state' => !empty($shippingAddress['region']) ? $shippingAddress['region'] : '',
+            'address1' => !empty($shippingAddress['street']) ? $shippingAddress['street'] : '',
+            'address2' => !empty($shippingAddress['street']) ? $shippingAddress['street'] : '',
+            'city' => !empty($shippingAddress['city']) ? $shippingAddress['city'] : '',
+            'zipcode' => !empty($shippingAddress['postcode']) ? $shippingAddress['postcode'] : ''
+        );
+        $data['eventdata']['data']['billing_address'] = array(
+            'firstname' => !empty($billingAddress['firstname']) ? $billingAddress['firstname'] : '',
+            'lastname' => !empty($billingAddress['lastname']) ? $billingAddress['lastname'] : '',
+            'company' => !empty($billingAddress['company']) ? $billingAddress['company'] : '',
+            'phone' => !empty($billingAddress['telephone']) ? $billingAddress['telephone'] : '',
+            'country' => !empty($billingAddress['country_id']) ? $billingAddress['country_id'] : '',
+            'state' => !empty($billingAddress['region']) ? $billingAddress['region'] : '',
+            'address1' => !empty($billingAddress['street']) ? $billingAddress['street'] : '',
+            'address2' => !empty($billingAddress['street']) ? $billingAddress['street'] : '',
+            'city' => !empty($billingAddress['city']) ? $billingAddress['city'] : '',
+            'zipcode' => !empty($billingAddress['postcode']) ? $billingAddress['postcode'] : ''
+        );
+        Mage::helper('sendinblue')->curlPostAbandonedEvents($data, 'trackEvent');
+    }
+    /**
+     * This hook called for event sales_quote_save_after
+     */
+    public function cartUpdate($observer) {
+
+        if (Mage::helper('sendinblue')->ModuleisEnabled() == 0)
+        {
+            return false;
+        }
+        $requestParameters = Mage::app()->getRequest()->getParams();
+        $automationKey = Mage::getStoreConfig('sendinblue/automation/key');
+        $abandonedCartStatus = Mage::getStoreConfig('sendinblue/tracking/abandonedcartstatus');
+        $email = Mage::helper('sendinblue')->getEmail();
+    
+        //Cart Quote related to current session
+        $cartQuote =  $observer->getQuote();
+        // Get Total Items in Cart
+        $cartItemsCount = $cartQuote->getItemsCount();
+        // Get Cart Id of current session
+        $cartId = $cartQuote->getId();
+         
+        //check if Order already reserved or placed / If yes then do not sent "cart_updated event"
+        $orderId = $cartQuote->getReservedOrderId();
+
+        if (empty($automationKey) || $abandonedCartStatus != 1 || empty($email) || empty($cartId) || !empty($orderId)) { 
+            return false;
+        }
+        // Get all atributes of cart in array
+        $cartData = $cartQuote->getData();
+        $isCartEmptyAction = !empty($requestParameters['update_cart_action']) ? $requestParameters['update_cart_action'] == 'empty_cart' : 0;
+        $data = array(
+            'email' => $email,
+            'event' => '',
+            'properties' => array(
+                'FIRSTNAME' => $cartData['customer_firstname'],
+                'LASTNAME' =>  $cartData['customer_lastname']
+            ),
+            'eventdata' => array(
+                'id' => "cart:".$cartId,
+                'data' => array()
+            )
+        );
+       
+        if ($cartItemsCount > 0) {
+            // Get Total object of the Cart like total, discount, shipping, grand_total and subtotal
+            $totals = $cartQuote->getTotals();
+                    
+            $totalDiscount = !empty($totals['discount']) ? $totals['discount']->getValue() : 0;
+            $totalShipping = !empty($totals['shipping']) ? $totals['shipping']->getValue() : 0;
+            $totalTax = !empty($totals['tax']) ? $totals['tax']->getValue() : 0;
+
+            $data['eventdata']['data']['currency'] = $cartQuote->getQuoteCurrencyCode();
+            $data['eventdata']['data']['discount'] = $totalDiscount;
+            $data['eventdata']['data']['discount_taxinc'] = $totalDiscount;
+            $data['eventdata']['data']['revenue'] = !empty($cartData['grand_total']) ? $cartData['grand_total']: 0;
+            $data['eventdata']['data']['shipping'] = $totalShipping;
+            $data['eventdata']['data']['shipping_taxinc'] = $totalShipping;
+            $data['eventdata']['data']['subtotal']= !empty($cartData['subtotal_with_discount']) ? $cartData['subtotal_with_discount']: 0;
+            $data['eventdata']['data']['subtotal_predisc']= !empty($cartData['subtotal']) ?$cartData['subtotal']: 0;
+            $data['eventdata']['data']['subtotal_taxinc']= !empty($cartData['subtotal_with_discount']) ? $cartData['subtotal_with_discount'] + $totalTax : 0;
+            $data['eventdata']['data']['subtotal_predisc_taxinc'] = !empty($cartData['subtotal']) ? $cartData['subtotal'] + $totalTax: 0;
+            $data['eventdata']['data']['tax']= $totalTax;
+            $data['eventdata']['data']['total']= !empty($cartData['grand_total']) ? $cartData['grand_total']: 0;
+            $data['eventdata']['data']['total_before_tax']=  !empty($cartData['grand_total']) ? $cartData['grand_total'] - $totalTax: 0;
+            $data['eventdata']['data']['url']= Mage::getUrl('checkout/cart');
+            $allProducts = array();
+            foreach ($cartQuote->getAllVisibleItems() as $item) {
+                $productData = $item->getData();
+                $productId = !empty($productData['product_id']) ? $productData['product_id']: '';
+                $product = Mage::getModel('catalog/product')->load($productId);
+                if(empty($product)){
+                    continue;
+                }
+                //getImage() will return relative path of image or "no_selection" id there is no image
+                $image = $product->getImage();
+                $imageFullUrl = !empty($image) && $image != 'no_selection' ?  Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'catalog/product' .$image : $product->getImageUrl();
+                $discAmountSum = !empty($productData['discount_amount']) ? $productData['discount_amount']:0;
+                $qty = !empty($productData['qty']) ? $productData['qty']:1;
+                $discAmountPerItem = $discAmountSum/$qty;
+                $pricePreDisc = !empty($productData['price']) ? $productData['price'] : 0;
+                $pricePreDiscTaxInc = !empty($productData['price_incl_tax']) ? $productData['price_incl_tax'] : 0;
+                $priceDiscInc = $pricePreDisc - $discAmountPerItem; // here minus discount because discount is already negative
+                $priceDiscIncTaxInc = $pricePreDiscTaxInc - $discAmountPerItem; // here minus discount because discount is already negative
+                $allProducts[] = array(
+                    'id' => !empty($productData['product_id']) ? $productData['product_id'] : '',
+                    'name' => !empty($productData['name']) ? $productData['name'] : '',
+                    'category' => !empty($productData['product_type']) ? $productData['product_type'] : '',
+                    'description_short' => $product->getData('short_description'),
+                    'available_now' => !empty($product->getStockItem()->getQty()) ? 'In Stock': 0,
+                    'price' => round($priceDiscInc, 3),
+                    'quantity' => $qty,
+                    'variant_id_name' => '',
+                    'variant_id' => '',
+                    'size' => !empty($product->getData('size')) ? $product->getData('size') : '',
+                    'sku' => !empty($productData['sku']) ? $productData['sku'] : '',
+                    'url' => $product->getProductUrl(),
+                    'image' => $imageFullUrl,
+                    'price_predisc' =>  round($pricePreDisc, 3),
+                    'price_predisc_taxinc' => round($pricePreDiscTaxInc, 3),
+                    'price_taxinc' => round($priceDiscIncTaxInc, 3),                                   
+                    'tax_amount' => round($pricePreDiscTaxInc - $pricePreDisc, 3),
+                    'tax_rate' => !empty($productData['tax_percent']) ? $productData['tax_percent'] : 0,
+                    'tax_name' => !empty($productData['tax_name']) ? $productData['tax_name'] : '',
+                    'disc_amount' => round($discAmountPerItem, 3),
+                    'disc_amount_taxinc' => round($discAmountPerItem,3),
+                    'disc_rate' => round($discAmountPerItem/$pricePreDisc, 3)*100,
+                ) ;
+            }
+            $data['eventdata']['data']['items'] = $allProducts;
+            $data['event'] = 'cart_updated';
+            Mage::helper('sendinblue')->curlPostAbandonedEvents($data, 'trackEvent');
+        } else {
+            // on every refresh of checkout/cart , this hook(cartUpdate) trigger, so Add this "uenc" or "item" check to prevent "cart_deleted" event trigger on simple refresh checkout page when the cart is already empty
+            if($isCartEmptyAction || (empty($cartItemsCount) && (!empty($requestParameters['uenc']) || !empty($requestParameters['item'])))) {
+                $data['event'] = 'cart_deleted';
+                $data['eventdata']['data']['items'] = array();
+                Mage::helper('sendinblue')->curlPostAbandonedEvents($data, 'trackEvent');
+            }
+        }
+    }
 }

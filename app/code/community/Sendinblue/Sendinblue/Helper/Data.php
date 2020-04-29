@@ -71,4 +71,41 @@ class Sendinblue_Sendinblue_Helper_Data extends Mage_Core_Helper_Abstract
         </script>
 EOT;
     }
+    public function getEmail(){
+        $email = '';
+        if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+            $customer = Mage::getSingleton('customer/session')->getCustomer();
+            $email = Mage::getModel('customer/customer')->load($customer->getId())->getEmail();
+        }
+        return $email;
+    }
+    /**
+     * Tracking Events
+     * Abandoned Cart.
+     */
+    public function curlPostAbandonedEvents($data, $eventMethod)
+    {
+        $url = "https://in-automate.sendinblue.com/api/v2/$eventMethod";
+        $automationKey = Mage::getStoreConfig('sendinblue/automation/key');
+            $headers = array(
+            'Content-Type: application/json',
+            'ma-key: ' . $automationKey
+        );
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => json_encode($data),
+        ));
+        curl_exec($curl);
+        curl_close($curl);
+    }
 }
