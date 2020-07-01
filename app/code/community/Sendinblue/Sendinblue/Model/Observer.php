@@ -267,7 +267,7 @@ class Sendinblue_Sendinblue_Model_Observer
         $abandonedCartStatus = Mage::getStoreConfig('sendinblue/tracking/abandonedcartstatus');
         $email = Mage::helper('sendinblue')->getEmail();
        
-        if (empty(email)) {
+        if (empty($email)) {
             $email = $orderData['customer_email'];
         }
         if (empty($automationKey) || $abandonedCartStatus != 1 || empty($email)) { 
